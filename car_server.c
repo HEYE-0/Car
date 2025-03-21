@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
@@ -10,242 +9,150 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include <wiringPi.h>
+#include <pigpio.h> // 替换 wiringPi
 
 #define BUFSIZE 512
 
-#define MOTOR_GO_FORWARD   digitalWrite(1,HIGH);digitalWrite(4,LOW); digitalWrite(5,HIGH);digitalWrite(6,LOW)
-#define MOTOR_GO_BACK	   digitalWrite(1,LOW); digitalWrite(4,HIGH);digitalWrite(5,LOW); digitalWrite(6,HIGH)
-#define MOTOR_GO_RIGHT	   digitalWrite(1,HIGH);digitalWrite(4,LOW); digitalWrite(5,LOW); digitalWrite(6,LOW)
-#define MOTOR_GO_LEFT	   digitalWrite(1,LOW); digitalWrite(4,LOW); digitalWrite(5,HIGH);digitalWrite(6,LOW)
-#define MOTOR_GO_STOP	   digitalWrite(1, LOW);digitalWrite(4,LOW); digitalWrite(5, LOW);digitalWrite(6,LOW)
+// 电机控制宏
+#define MOTOR_GO_FORWARD   gpioWrite(1,1); gpioWrite(4,0); gpioWrite(5,1); gpioWrite(6,0)
+#define MOTOR_GO_BACK      gpioWrite(1,0); gpioWrite(4,1); gpioWrite(5,0); gpioWrite(6,1)
+#define MOTOR_GO_RIGHT     gpioWrite(1,1); gpioWrite(4,0); gpioWrite(5,0); gpioWrite(6,0)
+#define MOTOR_GO_LEFT      gpioWrite(1,0); gpioWrite(4,0); gpioWrite(5,1); gpioWrite(6,0)
+#define MOTOR_GO_STOP      gpioWrite(1,0); gpioWrite(4,0); gpioWrite(5,0); gpioWrite(6,0)
 
 typedef struct CLIENT {
-	int fd;
-	struct sockaddr_in addr;
-}CLIENT;
+    int fd;
+    struct sockaddr_in addr;
+} CLIENT;
 
-int main(int argc, char *argv[])
-{
-    int sockfd;
-    int listenfd;
-    int connectfd;
+void executeCommand(unsigned char command) {  // 提取重复的 switch 代码
+    switch(command) {
+        case 0x01: MOTOR_GO_FORWARD; printf("forward\n"); break;
+        case 0x02: MOTOR_GO_BACK;    printf("back\n"); break;
+        case 0x03: MOTOR_GO_LEFT;    printf("left\n"); break;
+        case 0x04: MOTOR_GO_RIGHT;   printf("right\n"); break;
+        case 0x00: MOTOR_GO_STOP;    printf("stop\n"); break;
+        default: MOTOR_GO_STOP;      printf("invalid command\n"); break;
+    }
+}
 
-    int ret;
-    int maxfd=-1;
+int main(int argc, char *argv[]) {
+    int sockfd, listenfd, connectfd;
+    int ret, maxfd = -1;
     struct timeval tv;
-
-    struct sockaddr_in server_addr;
-    struct sockaddr_in client_addr;
-
+    struct sockaddr_in server_addr, client_addr;
     socklen_t len;
-    int portnumber;
-
-    char buf[BUFSIZE]={0xff,0x00,0x00,0x00,0xff};
-
-    int z,i,maxi = -1;
-    int k;
-    fd_set rset,allset;
-
+    long portnumber;
+    char buf[BUFSIZE];
+    int i, maxi = -1, k;
+    fd_set rset, allset;
     CLIENT client[FD_SETSIZE];
 
-    /*RPI*/
-    wiringPiSetup();
-    /*WiringPi GPIO*/
-    pinMode (1, OUTPUT);	//IN1
-    pinMode (4, OUTPUT);	//IN2
-    pinMode (5, OUTPUT);	//IN3
-    pinMode (6, OUTPUT);	//IN4
-
-    pinMode (3, OUTPUT);	//beed
-	
-	/*Init output*/
-	digitalWrite(1,HIGH);
-	digitalWrite(4,HIGH);
-	digitalWrite(5,HIGH);
-	digitalWrite(6,HIGH);
-	
-	digitalWrite(1,HIGH);
-
-    if(argc != 2)
-    {
-        printf("Please add portnumber!");
-        exit(1);
+    if(argc != 2) {
+        fprintf(stderr, "Usage: %s <port>\n", argv[0]);
+        exit(EXIT_FAILURE);
     }
 
-    if((portnumber = atoi(argv[1]))<0)
-    {
-        printf("Enter Error!");
-        exit(1);
+    char *endptr;
+    portnumber = strtol(argv[1], &endptr, 10);  // 替换 atoi，增加输入检查
+    if (*endptr != '\0' || portnumber <= 0 || portnumber > 65535) {
+        fprintf(stderr, "Invalid port number!\n");
+        exit(EXIT_FAILURE);
     }
 
-
-    if((listenfd = socket(PF_INET, SOCK_STREAM, 0)) == -1)
-    {
-        printf("Socket Error!");
-        exit(1);
+    if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        perror("Socket creation failed");
+        exit(EXIT_FAILURE);
     }
 
-
-    memset(&server_addr, 0, sizeof server_addr);
+    memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(portnumber);
 
-
-    if((bind(listenfd, (struct sockaddr *)(&server_addr), sizeof server_addr)) == -1)
-    {
-        printf("Bind Error!");
-        exit(1);
+    if (bind(listenfd, (struct sockaddr *)(&server_addr), sizeof(server_addr)) == -1) {
+        perror("Bind failed");
+        exit(EXIT_FAILURE);
     }
 
-    if(listen(listenfd, 128) == -1)
-    {
-        printf("Listen Error!");
-        exit(1);
+    if (listen(listenfd, 128) == -1) {
+        perror("Listen failed");
+        exit(EXIT_FAILURE);
     }
 
-    for(i=0;i<FD_SETSIZE;i++)
-    {
-	client[i].fd = -1;
+    if (gpioInitialise() < 0) {  // 替换 wiringPiSetup
+        fprintf(stderr, "Failed to initialize GPIO\n");
+        exit(EXIT_FAILURE);
     }
+
+    // 初始化 GPIO
+    for (i = 1; i <= 6; i++) gpioSetMode(i, PI_OUTPUT);
+    gpioSetMode(3, PI_OUTPUT);
+    MOTOR_GO_STOP;
 
     FD_ZERO(&allset);
     FD_SET(listenfd, &allset);
-
     maxfd = listenfd;
+    printf("Waiting for client's request...\n");
 
-    printf("waiting for the client's request...\n");
+    while (1) {
+        rset = allset;
+        tv.tv_sec = 1;  // 调整等待时间，提高 CPU 效率
+        tv.tv_usec = 0;
 
-    while (1)
-    {
-	rset = allset;
-
-	tv.tv_sec = 0;      //wait 1u second
-        tv.tv_usec = 1;
-    
         ret = select(maxfd + 1, &rset, NULL, NULL, &tv);
-    
-	if(ret == 0)
-	    continue;
-	else if(ret < 0)
-	{
-	    printf("select failed!");
-       	    break;
-	}
-	else
-	{
-	    if(FD_ISSET(listenfd,&rset)) // new connection
-	    {
-		len = sizeof (struct sockaddr_in);
-		if((connectfd = accept(listenfd,(struct sockaddr*)(&client_addr),&len)) == -1)
-		{
-		    printf("accept() error");
-		    continue;
+        if (ret == -1) {
+            perror("Select failed");
+            break;
+        } else if (ret == 0) {
+            continue;
+        }
+
+        if (FD_ISSET(listenfd, &rset)) {  // 处理新连接
+            len = sizeof(client_addr);
+            connectfd = accept(listenfd, (struct sockaddr *)(&client_addr), &len);
+            if (connectfd == -1) {
+                perror("Accept failed");
+                continue;
+            }
+            for (i = 0; i < FD_SETSIZE; i++) {
+                if (client[i].fd < 0) {
+                    client[i].fd = connectfd;
+                    client[i].addr = client_addr;
+                    printf("Connection from %s\n", inet_ntoa(client[i].addr.sin_addr));
+                    break;
                 }
+            }
+            if (i == FD_SETSIZE) printf("Too many connections\n");
+            FD_SET(connectfd, &allset);
+            if (connectfd > maxfd) maxfd = connectfd;
+            if (i > maxi) maxi = i;
+        }
 
-		for(i=0;i<FD_SETSIZE;i++)
-		{
-		    if(client[i].fd < 0)
-		    {
-		        client[i].fd = connectfd;
-			client[i].addr = client_addr;
-			printf("Yout got a connection from %s\n",inet_ntoa(client[i].addr.sin_addr));
-			break;
-		    }
-		}
-
-		if(i == FD_SETSIZE)
-		    printf("Overfly connections");
-
-		FD_SET(connectfd,&allset);
-
-		if(connectfd > maxfd)
-		    maxfd = connectfd;
-
-		if(i > maxi)
-		    maxi = i;
-	    }
-	    else
-	    {
-		for(i=0;i<=maxi;i++)
-		{
-		    if((sockfd = client[i].fd)<0)
-		        continue;
-
-                    if(FD_ISSET(sockfd,&rset))
-		    {
-			bzero(buf,BUFSIZE + 1);
-			if((z = read(sockfd,buf,sizeof buf)) >0)
-			{
-      		            buf[z] = '\0';
-                	    //printf("num = %d received data:%s\n",z,buf);
-			    /*
-                            for(k=0;k<z;k++) 
-			        printf("buf[%d]=%x\n",k,buf[k]);
-			    */
-			    if(z == 5)
-			    {
-				if(buf[1] == 0x00)
-				{
-	     			    switch(buf[2])
-		         	    {
-					case 0x01:MOTOR_GO_FORWARD; printf("forward\n");break;
-					case 0x02:MOTOR_GO_BACK;    printf("back\n");break;            						
-					case 0x03:MOTOR_GO_LEFT;    printf("left\n");break;
-					case 0x04:MOTOR_GO_RIGHT;   printf("right\n");break;
-					case 0x00:MOTOR_GO_STOP;    printf("stop\n");break;
-					default: break;
-				    }
-				    digitalWrite(3, HIGH);
-				}
-				else
-				{
-				    digitalWrite(3, LOW);
-				    MOTOR_GO_STOP;
-				}
-			    }
-			    else if(z == 6)
-			    {
-				if(buf[2] == 0x00)
-				{
-				    switch(buf[3])
-				    {
-					case 0x01:MOTOR_GO_FORWARD; printf("forward\n");break;
-					case 0x02:MOTOR_GO_BACK;    printf("back\n");break;							
-					case 0x03:MOTOR_GO_LEFT;    printf("left\n");break;
-					case 0x04:MOTOR_GO_RIGHT;   printf("right\n");break;
-					case 0x00:MOTOR_GO_STOP;    printf("stop\n");break;
-					default: break;
-				    }
-				    digitalWrite(3, HIGH);
-				}
-				else
-				{
-				    digitalWrite(3, LOW);
-				    MOTOR_GO_STOP;
-				}
-			    }
-			    else
-			    {
-				digitalWrite(3, LOW);
-				MOTOR_GO_STOP;
-			    }
-				
-                        }
-		        else
-		        {
-		            printf("disconnected by client!");
-	                    close(sockfd);
-	                    FD_CLR(sockfd,&allset);
-	                    client[i].fd = -1;
-		        }
-	            }
-	        }
+        for (i = 0; i <= maxi; i++) {
+            if ((sockfd = client[i].fd) < 0) continue;
+            if (FD_ISSET(sockfd, &rset)) {
+                memset(buf, 0, BUFSIZE);
+                if ((ret = read(sockfd, buf, BUFSIZE - 1)) > 0) {
+                    buf[ret] = '\0';  // 避免缓冲区溢出
+                    if (ret == 5 || ret == 6) {
+                        if (buf[1] == 0x00) executeCommand(buf[2]);
+                        else MOTOR_GO_STOP;
+                        gpioWrite(3, (buf[1] == 0x00) ? 1 : 0);
+                    } else {
+                        MOTOR_GO_STOP;
+                    }
+                } else {
+                    printf("Client disconnected\n");
+                    close(sockfd);
+                    FD_CLR(sockfd, &allset);
+                    memset(&client[i], 0, sizeof(CLIENT));  // 释放资源
+                }
             }
         }
     }
+
     close(listenfd);
+    gpioTerminate(); // 关闭 GPIO
     return 0;
 }
-

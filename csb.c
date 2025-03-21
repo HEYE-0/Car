@@ -4,133 +4,171 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-#include <sys/types.h>
-#include <time.h>
+#include <sys/time.h>
 #include <wiringPi.h>
-#define Trig	28
-#define Echo	29
+
+#define Trig 28  // è¶…å£°æ³¢è§¦å‘å¼•è„š
+#define Echo 29  // è¶…å£°æ³¢å›å“å¼•è„š
 #define BUFSIZE 512
+
+// åˆå§‹åŒ–è¶…å£°æ³¢ä¼ æ„Ÿå™¨
 void ultraInit(void)
 {
-  pinMode(Echo, INPUT);
-  pinMode(Trig, OUTPUT);
+    pinMode(Echo, INPUT);
+    pinMode(Trig, OUTPUT);
 }
 
+// æµ‹é‡è·ç¦»ï¼Œè¿”å›å€¼å•ä½ä¸º cm
 float disMeasure(void)
 {
-  struct timeval tv1;
-  struct timeval tv2;
-  long start, stop;
-  float dis;
+    struct timeval tv1, tv2;
+    long start, stop;
+    float dis;
+    int timeout = 5000;  // è¶…æ—¶é™åˆ¶ 5msï¼Œé˜²æ­¢æ­»å¾ªç¯
+    int count = 0;
 
-  digitalWrite(Trig, LOW);
-  delayMicroseconds(2);
+    // å‘é€è§¦å‘ä¿¡å·
+    digitalWrite(Trig, LOW);
+    delayMicroseconds(2);
+    digitalWrite(Trig, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(Trig, LOW);
 
-  digitalWrite(Trig, HIGH);
-  delayMicroseconds(10);	  //·¢³ö³¬Éù²¨Âö³å
-  digitalWrite(Trig, LOW);
-  
-  while(!(digitalRead(Echo) == 1));
-  gettimeofday(&tv1, NULL);		   //»ñÈ¡µ±Ç°Ê±¼ä
+    // ç­‰å¾…å›æ³¢ä¿¡å·ï¼Œæœ€å¤šç­‰å¾… 5ms
+    while (!(digitalRead(Echo) == 1))
+    {
+        count++;
+        if (count > timeout) return -1; // è¶…æ—¶è¿”å› -1
+    }
+    gettimeofday(&tv1, NULL);
 
-  while(!(digitalRead(Echo) == 0));
-  gettimeofday(&tv2, NULL);		   //»ñÈ¡µ±Ç°Ê±¼ä
+    count = 0;
+    while (!(digitalRead(Echo) == 0))
+    {
+        count++;
+        if (count > timeout) return -1; // è¶…æ—¶è¿”å› -1
+    }
+    gettimeofday(&tv2, NULL);
 
-  start = tv1.tv_sec * 1000000 + tv1.tv_usec;   //Î¢Ãë¼¶µÄÊ±¼ä
-  stop  = tv2.tv_sec * 1000000 + tv2.tv_usec;
-
-  dis = (float)(stop - start) / 1000000 * 34000 / 2;  //Çó³ö¾àÀë
-
-  return dis;
+    // è®¡ç®—æ—¶é—´å·®å¹¶è½¬æ¢ä¸ºè·ç¦»
+    start = tv1.tv_sec * 1000000 + tv1.tv_usec;
+    stop = tv2.tv_sec * 1000000 + tv2.tv_usec;
+    dis = (float)(stop - start) / 1000000 * 34000 / 2;
+    return dis;
 }
-void run()     // Ç°½ø
+
+// ä½¿å°è½¦å‰è¿›ï¼ŒæŒç»­æ—¶é—´ä¸º duration æ¯«ç§’
+void run(int duration)
 {
-    softPwmWrite(1,0); //×óÂÖÇ°½ø
-	softPwmWrite(4,500); 
-	softPwmWrite(5,0); //ÓÒÂÖÇ°½ø
-	softPwmWrite(6,500); 
-
- 
+    unsigned long start_time = millis();
+    while (millis() - start_time < duration)
+    {
+        softPwmWrite(1, 0);
+        softPwmWrite(4, 500);
+        softPwmWrite(5, 0);
+        softPwmWrite(6, 500);
+    }
 }
 
-void brake(int time)         //É²³µ£¬Í£³µ
+// ä½¿å°è½¦åœæ­¢
+void brake()
 {
-    softPwmWrite(1,0); //×óÂÖstop
-	softPwmWrite(4,0); 
-	softPwmWrite(5,0); //stop
-	softPwmWrite(6,0); 
-    delay(time * 100);//Ö´ĞĞÊ±¼ä£¬¿ÉÒÔµ÷Õû  
+    softPwmWrite(1, 0);
+    softPwmWrite(4, 0);
+    softPwmWrite(5, 0);
+    softPwmWrite(6, 0);
 }
 
-void left(int time)         //×ó×ª(×óÂÖ²»¶¯£¬ÓÒÂÖÇ°½ø)
+// ä½¿å°è½¦å·¦è½¬ï¼ŒæŒç»­æ—¶é—´ä¸º duration æ¯«ç§’
+void left(int duration)
 {
-    softPwmWrite(1,0); //×óÂÖstop
-	softPwmWrite(4,0); 
-	softPwmWrite(5,0); //ÓÒÂÖÇ°½ø
-	softPwmWrite(6,500); 
-	delay(time * 100);
+    unsigned long start_time = millis();
+    while (millis() - start_time < duration)
+    {
+        softPwmWrite(1, 0);
+        softPwmWrite(4, 0);
+        softPwmWrite(5, 0);
+        softPwmWrite(6, 500);
+    }
 }
 
-
-
-void right(int time)        //ÓÒ×ª(ÓÒÂÖ²»¶¯£¬×óÂÖÇ°½ø)
+// ä½¿å°è½¦å³è½¬ï¼ŒæŒç»­æ—¶é—´ä¸º duration æ¯«ç§’
+void right(int duration)
 {
-    softPwmWrite(1,0); //×óÂÖÇ°½ø
-	softPwmWrite(4,500); 
-	softPwmWrite(5,0); //ÓÒÂÖstop
-	softPwmWrite(6,0); 
-    delay(time * 500);	//Ö´ĞĞÊ±¼ä£¬¿ÉÒÔµ÷Õû  
+    unsigned long start_time = millis();
+    while (millis() - start_time < duration)
+    {
+        softPwmWrite(1, 0);
+        softPwmWrite(4, 500);
+        softPwmWrite(5, 0);
+        softPwmWrite(6, 0);
+    }
 }
 
-
-
-void back(int time)          //ºóÍË
+// ä½¿å°è½¦åé€€ï¼ŒæŒç»­æ—¶é—´ä¸º duration æ¯«ç§’
+void back(int duration)
 {
-    softPwmWrite(1,500); //×óÂÖback
-	softPwmWrite(4,0); 
-	softPwmWrite(5,500); //ÓÒÂÖback
-  	softPwmWrite(6,0); 
-    delay(time *200);     //Ö´ĞĞÊ±¼ä£¬¿ÉÒÔµ÷Õû  
+    unsigned long start_time = millis();
+    while (millis() - start_time < duration)
+    {
+        softPwmWrite(1, 500);
+        softPwmWrite(4, 0);
+        softPwmWrite(5, 500);
+        softPwmWrite(6, 0);
+    }
 }
+
 int main()
 {
-
     float dis;
 
-   // char buf[BUFSIZE]={0xff,0x00,0x00,0x00,0xff};
+    // åˆå§‹åŒ– WiringPiï¼Œå¦‚æœå¤±è´¥åˆ™é€€å‡º
+    if (wiringPiSetup() == -1)
+    {
+        printf("WiringPi åˆå§‹åŒ–å¤±è´¥ï¼\n");
+        return -1;
+    }
 
+    // è®¾ç½®ç”µæœºæ§åˆ¶å¼•è„š
+    pinMode(1, OUTPUT);
+    pinMode(4, OUTPUT);
+    pinMode(5, OUTPUT);
+    pinMode(6, OUTPUT);
 
-    /*RPI*/
-    wiringPiSetup();
-    /*WiringPi GPIO*/
-    pinMode (1, OUTPUT);	//IN1
-    pinMode (4, OUTPUT);	//IN2
-    pinMode (5, OUTPUT);	//IN3
-    pinMode (6, OUTPUT);	//IN4
-    softPwmCreate(1,1,500);   
-    softPwmCreate(4,1,500);
-    softPwmCreate(5,1,500);
-    softPwmCreate(6,1,500);
-  while(1){
-    dis = disMeasure();
-    printf("distance = %0.2f cm\n",dis);//Êä³öµ±Ç°³¬Éù²¨²âµÃµÄ¾àÀë
-    if(dis>4&&dis<30){   //²âµÃÇ°·½ÕÏ°­µÄ¾àÀë´óÓÚ4cmĞ¡ÓÚ30cmÊ±×ö³öÈçÏÂÏìÓ¦
+    // åˆå§‹åŒ– PWMï¼Œåˆå§‹å€¼è®¾ä¸º 0ï¼Œé¿å…ç”µæœºæŠ–åŠ¨
+    softPwmCreate(1, 0, 500);
+    softPwmCreate(4, 0, 500);
+    softPwmCreate(5, 0, 500);
+    softPwmCreate(6, 0, 500);
 
-	  //brake(5);
-	  //back(5);//ºóÍË500ms
-	  left(3);//×ó×ª300ms
-	   
+    while (1)
+    {
+        // æµ‹é‡å‰æ–¹éšœç¢ç‰©è·ç¦»
+        dis = disMeasure();
+        if (dis == -1)
+        {
+            printf("æµ‹è·å¤±è´¥ï¼\n");
+            continue;
+        }
 
-      }
-     else if(dis>30&&dis<450){//²âµÃÇ°·½ÕÏ°­µÄ¾àÀë´óÓÚ30cmĞ¡ÓÚ450cmÊ±×ö³öÈçÏÂÏìÓ¦
+        printf("è·ç¦» = %.2f cm\n", dis);
 
-        run();  //ÎŞÕÏ°­Ê±Ç°½ø
-         }
-	else{
-		brake(5);
-	}
-  }
-  return 0;
+        if (dis > 4 && dis < 30)
+        {
+            // è¿‡è¿‘æ—¶å·¦è½¬é¿éšœ
+            left(300);
+        }
+        else if (dis > 30 && dis < 450)
+        {
+            // å®‰å…¨è·ç¦»æ—¶å‰è¿›
+            run(500);
+        }
+        else
+        {
+            // å…¶ä»–æƒ…å†µåˆ¹è½¦
+            brake();
+        }
+    }
 
+    return 0;
 }
-

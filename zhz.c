@@ -1,130 +1,114 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-#include <netdb.h>
-#include <sys/types.h>
-#include <time.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-
 #include <wiringPi.h>
-#define Trig	28
-#define Echo	29
-#define LEFT	27
-#define RIGHT	26
+#include <softPwm.h>
+
+#define Trig  28
+#define Echo  29
+#define LEFT  27
+#define RIGHT 26
 #define BUFSIZE 512
 
-#define MOTOR_GO_FORWARD   digitalWrite(1,HIGH);digitalWrite(4,LOW);digitalWrite(5,HIGH);digitalWrite(6,LOW)
-#define MOTOR_GO_BACK	   digitalWrite(4,HIGH);digitalWrite(1,LOW);digitalWrite(6,HIGH);digitalWrite(5,LOW)
-#define MOTOR_GO_RIGHT	   digitalWrite(1,HIGH);digitalWrite(4,LOW);digitalWrite(6,HIGH);digitalWrite(5,LOW)
-#define MOTOR_GO_LEFT	   digitalWrite(4,HIGH);digitalWrite(1,LOW);digitalWrite(5,HIGH);digitalWrite(6,LOW)
-#define MOTOR_GO_STOP	   digitalWrite(1, LOW);digitalWrite(4,LOW);digitalWrite(5, LOW);digitalWrite(6,LOW)
+#define MOTOR_GO_FORWARD   digitalWrite(1,HIGH); digitalWrite(4,LOW); digitalWrite(5,HIGH); digitalWrite(6,LOW)
+#define MOTOR_GO_BACK      digitalWrite(4,HIGH); digitalWrite(1,LOW); digitalWrite(6,HIGH); digitalWrite(5,LOW)
+#define MOTOR_GO_RIGHT     digitalWrite(1,HIGH); digitalWrite(4,LOW); digitalWrite(6,HIGH); digitalWrite(5,LOW)
+#define MOTOR_GO_LEFT      digitalWrite(4,HIGH); digitalWrite(1,LOW); digitalWrite(5,HIGH); digitalWrite(6,LOW)
+#define MOTOR_GO_STOP      digitalWrite(1, LOW); digitalWrite(4,LOW); digitalWrite(5, LOW); digitalWrite(6,LOW)
 
-void run()     // Ç°½ø
-{
-    softPwmWrite(4,0); //×óÂÖÇ°½ø
-	softPwmWrite(1,250); 
-	softPwmWrite(6,0); //ÓÒÂÖÇ°½ø
-	softPwmWrite(5,250); 
+// GPIO åˆå§‹åŒ–
+void setup() {
+    if (wiringPiSetup() == -1) {
+        fprintf(stderr, "Setup failed!\n");
+        exit(1);
+    }
+    
+    pinMode(1, OUTPUT);
+    pinMode(4, OUTPUT);
+    pinMode(5, OUTPUT);
+    pinMode(6, OUTPUT);
+    pinMode(LEFT, INPUT);   // å·¦ä¼ æ„Ÿå™¨
+    pinMode(RIGHT, INPUT);  // å³ä¼ æ„Ÿå™¨
 
- 
+    softPwmCreate(1, 0, 500);
+    softPwmCreate(4, 0, 500);
+    softPwmCreate(5, 0, 500);
+    softPwmCreate(6, 0, 500);
 }
 
-void brake()         //É²³µ£¬Í£³µ
-{
-    softPwmWrite(1,0); //×óÂÖ
-	softPwmWrite(4,0); 
-	softPwmWrite(5,0); //stop
-	softPwmWrite(6,0); 
-  
+// å‰è¿›
+void run() {
+    printf("[INFO] Moving Forward\n");
+    softPwmWrite(1, 250);
+    softPwmWrite(4, 0);
+    softPwmWrite(5, 250);
+    softPwmWrite(6, 0);
 }
 
-void left()         //×ó×ª()
-{
-    softPwmWrite(4,250); //×óÂÖ
-	softPwmWrite(1,0); 
-	softPwmWrite(6,0); //ÓÒÂÖÇ°½ø
-	softPwmWrite(5,250); 
-
+// åœæ­¢
+void brake() {
+    printf("[INFO] Stopping\n");
+    softPwmWrite(1, 0);
+    softPwmWrite(4, 0);
+    softPwmWrite(5, 0);
+    softPwmWrite(6, 0);
 }
 
-
-
-void right()        //ÓÒ×ª()
-{
-    softPwmWrite(4,0); //×óÂÖÇ°½ø
-	softPwmWrite(1,250); 
-	softPwmWrite(6,250); //ÓÒÂÖ
-	softPwmWrite(5,0); 
-
+// å·¦è½¬
+void left() {
+    printf("[INFO] Turning Left\n");
+    softPwmWrite(4, 250);
+    softPwmWrite(1, 0);
+    softPwmWrite(6, 0);
+    softPwmWrite(5, 250);
 }
 
-
-
-void back()          //ºóÍË
-{
-    softPwmWrite(1,250); //×óÂÖback
-	softPwmWrite(4,0); 
-	softPwmWrite(5,250); //ÓÒÂÖback
-  	softPwmWrite(6,0); 
- 
+// å³è½¬
+void right() {
+    printf("[INFO] Turning Right\n");
+    softPwmWrite(4, 0);
+    softPwmWrite(1, 250);
+    softPwmWrite(6, 250);
+    softPwmWrite(5, 0);
 }
-int main(int argc, char *argv[])
-{
 
-    float dis;
-
-   // char buf[BUFSIZE]={0xff,0x00,0x00,0x00,0xff};
-
-	int SR;
-	int SL;
-    /*RPI*/
-    wiringPiSetup();
-    /*WiringPi GPIO*/
-    pinMode (1, OUTPUT);	//IN1
-    pinMode (4, OUTPUT);	//IN2
-    pinMode (5, OUTPUT);	//IN3
-    pinMode (6, OUTPUT);	//IN4
-    // pinMode (27, OUTPUT);	//¶æ»úĞÅºÅÊä³ö
-    softPwmCreate(1,1,500);   
-    softPwmCreate(4,1,500);
-    softPwmCreate(5,1,500);
-    softPwmCreate(6,1,500);
-    // softPwmCreate(27,1,50);	
-	//softPwmWrite(27,1);
-
- while(1)
-  {
-  //ÓĞĞÅºÅÎªLOW  Ã»ÓĞĞÅºÅÎªHIGH
-  SR = digitalRead(RIGHT);//ÓĞĞÅºÅ±íÃ÷ÔÚ°×É«ÇøÓò£¬³µ×Óµ×°åÉÏLÁÁ£»Ã»ĞÅºÅ±íÃ÷Ñ¹ÔÚºÚÏßÉÏ£¬³µ×Óµ×°åÉÏLÃğ
-  SL = digitalRead(LEFT);//ÓĞĞÅºÅ±íÃ÷ÔÚ°×É«ÇøÓò£¬³µ×Óµ×°åÉÏLÁÁ£»Ã»ĞÅºÅ±íÃ÷Ñ¹ÔÚºÚÏßÉÏ£¬³µ×Óµ×°åÉÏLÃğ
-  if (SL == LOW&&SR==LOW){
-   printf("GO");
-   run();
-   
-  }
-  else if (SL == HIGH&&SR == LOW){
-	  printf("RIGHT");
-
-	 left();
-	  
-  }
-  else if (SR == HIGH&&SL == LOW) {// ÓÒÑ­¼£ºìÍâ´«¸ĞÆ÷,¼ì²âµ½ĞÅºÅ£¬³µ×ÓÏò×óÆ«Àë¹ìµÀ£¬ÏòÓÒ×ª  
-  printf("LEFT");
-  
-  right ();
-  }
-  else {// ¶¼ÊÇ°×É«, Í£Ö¹
- printf("STOP");
- brake();
- }
-  }
-
- 
-  return 0;
-
+// åé€€
+void back() {
+    printf("[INFO] Moving Backward\n");
+    softPwmWrite(1, 250);
+    softPwmWrite(4, 0);
+    softPwmWrite(5, 250);
+    softPwmWrite(6, 0);
 }
+
+int main() {
+    setup();  // åˆå§‹åŒ– GPIO
+
+    int SR, SL;
+
+    while (1) {
+        SR = digitalRead(RIGHT);
+        SL = digitalRead(LEFT);
+
+        if (SL == LOW && SR == LOW) {   // ä¸¤è¾¹å‡æ— éšœç¢ï¼Œå‰è¿›
+            run();
+        } 
+        else if (SL == HIGH && SR == LOW) {  // å·¦ä¾§æ£€æµ‹åˆ°éšœç¢ç‰©ï¼Œå³è½¬
+            right();
+        } 
+        else if (SR == HIGH && SL == LOW) {  // å³ä¾§æ£€æµ‹åˆ°éšœç¢ç‰©ï¼Œå·¦è½¬
+            left();
+        } 
+        else {  // ä¸¤ä¾§å‡æ£€æµ‹åˆ°éšœç¢ç‰©ï¼Œåœæ­¢
+            brake();
+        }
+
+        delay(50);  // é¿å… CPU è¿‡è½½
+    }
+
+    return 0;
+}
+
 
