@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
@@ -9,135 +8,113 @@
 #include <time.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-
 #include <wiringPi.h>
-#define Trig	28
-#define Echo	29
-#define LEFT	27
-#define RIGHT	26
+
+// å®šä¹‰ä¼ æ„Ÿå™¨å’Œç”µæœºæ§åˆ¶çš„ GPIO å¼•è„šç¼–å·
+#define Trig  28  // è¶…å£°æ³¢è§¦å‘å¼•è„š
+#define Echo  29  // è¶…å£°æ³¢å›å“å¼•è„š
+#define LEFT  27  // å·¦ä¾§ä¼ æ„Ÿå™¨
+#define RIGHT 26  // å³ä¾§ä¼ æ„Ÿå™¨
 #define BUFSIZE 512
 
-#define MOTOR_GO_FORWARD   digitalWrite(1,HIGH);digitalWrite(4,LOW);digitalWrite(5,HIGH);digitalWrite(6,LOW)
-#define MOTOR_GO_BACK	   digitalWrite(4,HIGH);digitalWrite(1,LOW);digitalWrite(6,HIGH);digitalWrite(5,LOW)
-#define MOTOR_GO_RIGHT	   digitalWrite(1,HIGH);digitalWrite(4,LOW);digitalWrite(6,HIGH);digitalWrite(5,LOW)
-#define MOTOR_GO_LEFT	   digitalWrite(4,HIGH);digitalWrite(1,LOW);digitalWrite(5,HIGH);digitalWrite(6,LOW)
-#define MOTOR_GO_STOP	   digitalWrite(1, LOW);digitalWrite(4,LOW);digitalWrite(5, LOW);digitalWrite(6,LOW)
+// å®šä¹‰ç”µæœºæ§åˆ¶å®
+#define MOTOR_GO_FORWARD  digitalWrite(1,HIGH); digitalWrite(4,LOW); digitalWrite(5,HIGH); digitalWrite(6,LOW)
+#define MOTOR_GO_BACK     digitalWrite(4,HIGH); digitalWrite(1,LOW); digitalWrite(6,HIGH); digitalWrite(5,LOW)
+#define MOTOR_GO_RIGHT    digitalWrite(1,HIGH); digitalWrite(4,LOW); digitalWrite(6,HIGH); digitalWrite(5,LOW)
+#define MOTOR_GO_LEFT     digitalWrite(4,HIGH); digitalWrite(1,LOW); digitalWrite(5,HIGH); digitalWrite(6,LOW)
+#define MOTOR_GO_STOP     digitalWrite(1, LOW); digitalWrite(4,LOW); digitalWrite(5, LOW); digitalWrite(6,LOW)
 
-void run()     // Ç°½ø
-{
-    softPwmWrite(4,0); //×óÂÖÇ°½ø
-	softPwmWrite(1,250); 
-	softPwmWrite(6,0); //ÓÒÂÖÇ°½ø
-	softPwmWrite(5,250); 
-
- 
+// å‰è¿›
+void run() {
+    softPwmWrite(4, 0);   // å…³é—­å·¦åè½®ç”µæœº
+    softPwmWrite(1, 250); // å¯åŠ¨å·¦å‰è½®ç”µæœº
+    softPwmWrite(6, 0);   // å…³é—­å³åè½®ç”µæœº
+    softPwmWrite(5, 250); // å¯åŠ¨å³å‰è½®ç”µæœº
 }
 
-void brake()         //É²³µ£¬Í£³µ
-{
-    softPwmWrite(1,0); //×óÂÖ
-	softPwmWrite(4,0); 
-	softPwmWrite(5,0); //stop
-	softPwmWrite(6,0); 
-  
+// åˆ¹è½¦ï¼ˆåœæ­¢ï¼‰
+void brake() {
+    softPwmWrite(1, 0); // å…³é—­å·¦å‰è½®ç”µæœº
+    softPwmWrite(4, 0); // å…³é—­å·¦åè½®ç”µæœº
+    softPwmWrite(5, 0); // å…³é—­å³å‰è½®ç”µæœº
+    softPwmWrite(6, 0); // å…³é—­å³åè½®ç”µæœº
 }
 
-void left()         //×ó×ª()
-{
-    softPwmWrite(4,250); //×óÂÖ
-	softPwmWrite(1,0); 
-	softPwmWrite(6,0); //ÓÒÂÖÇ°½ø
-	softPwmWrite(5,250); 
-
-}
-void turn(int time)         //×ó×ª()
-{
-    softPwmWrite(4,250); //×óÂÖ
-	softPwmWrite(1,0); 
-	softPwmWrite(6,0); //ÓÒÂÖÇ°½ø
-	softPwmWrite(5,250); 
-	delay(time*0.2);
+// å·¦è½¬
+void left() {
+    softPwmWrite(4, 250); // å¯åŠ¨å·¦åè½®ç”µæœº
+    softPwmWrite(1, 0);   // å…³é—­å·¦å‰è½®ç”µæœº
+    softPwmWrite(6, 0);   // å…³é—­å³åè½®ç”µæœº
+    softPwmWrite(5, 250); // å¯åŠ¨å³å‰è½®ç”µæœº
 }
 
-
-void right()        //ÓÒ×ª()
-{
-    softPwmWrite(4,0); //×óÂÖÇ°½ø
-	softPwmWrite(1,250); 
-	softPwmWrite(6,250); //ÓÒÂÖ
-	softPwmWrite(5,0); 
-
+// æ§åˆ¶å°è½¦è½¬å¼¯
+void turn(int time) {
+    left(); // è°ƒç”¨å·¦è½¬å‡½æ•°
+    delay(time * 200); // é€šè¿‡æ—¶é—´æ§åˆ¶è½¬å¼¯è§’åº¦
 }
 
-
-
-void back(int time)          //ºóÍË
-{
-      softPwmWrite(4,250); //×óÂÖback
-	softPwmWrite(1,0); 
-	softPwmWrite(6,250); //ÓÒÂÖback
-  	softPwmWrite(5,0); 
-	delay(time*0.1);
- 
+// å³è½¬
+void right() {
+    softPwmWrite(4, 0);   // å…³é—­å·¦åè½®ç”µæœº
+    softPwmWrite(1, 250); // å¯åŠ¨å·¦å‰è½®ç”µæœº
+    softPwmWrite(6, 250); // å¯åŠ¨å³åè½®ç”µæœº
+    softPwmWrite(5, 0);   // å…³é—­å³å‰è½®ç”µæœº
 }
-int main(int argc, char *argv[])
-{
 
-    float dis;
+// åé€€
+void back(int time) {
+    softPwmWrite(4, 250); // å¯åŠ¨å·¦åè½®ç”µæœº
+    softPwmWrite(1, 0);   // å…³é—­å·¦å‰è½®ç”µæœº
+    softPwmWrite(6, 250); // å¯åŠ¨å³åè½®ç”µæœº
+    softPwmWrite(5, 0);   // å…³é—­å³å‰è½®ç”µæœº
+    delay(time * 100); // æ§åˆ¶åé€€æ—¶é—´
+}
 
-   // char buf[BUFSIZE]={0xff,0x00,0x00,0x00,0xff};
-
-	int SR;
-	int SL;
-    /*RPI*/
+int main(int argc, char *argv[]) {
+    int SR, SL;
+    
+    // åˆå§‹åŒ– WiringPi
     wiringPiSetup();
-    /*WiringPi GPIO*/
-    pinMode (1, OUTPUT);	//IN1
-    pinMode (4, OUTPUT);	//IN2
-    pinMode (5, OUTPUT);	//IN3
-    pinMode (6, OUTPUT);	//IN4
-    // pinMode (27, OUTPUT);	//¶æ»úĞÅºÅÊä³ö
-    softPwmCreate(1,1,500);   
-    softPwmCreate(4,1,500);
-    softPwmCreate(5,1,500);
-    softPwmCreate(6,1,500);
-    // softPwmCreate(27,1,50);	
-	//softPwmWrite(27,1);
-
- while(1)
-  {
-  //ÓĞĞÅºÅÎªLOW  Ã»ÓĞĞÅºÅÎªHIGH
-  SR = digitalRead(RIGHT);//ÓĞĞÅºÅ±íÃ÷ÔÚ°×É«ÇøÓò£¬³µ×Óµ×°åÉÏLÁÁ£»Ã»ĞÅºÅ±íÃ÷Ñ¹ÔÚºÚÏßÉÏ£¬³µ×Óµ×°åÉÏLÃğ
-  SL = digitalRead(LEFT);//ÓĞĞÅºÅ±íÃ÷ÔÚ°×É«ÇøÓò£¬³µ×Óµ×°åÉÏLÁÁ£»Ã»ĞÅºÅ±íÃ÷Ñ¹ÔÚºÚÏßÉÏ£¬³µ×Óµ×°åÉÏLÃğ
-  if (SL == HIGH&&SR==HIGH){
-   printf("GO");
-   run();
-   
-  }
-  else if (SL == HIGH&&SR == LOW){
-	  printf("RIGHT");
-
-	 left();
-	  
-  }
-  else if (SR == HIGH&&SL == LOW) {// ÓÒÑ­¼£ºìÍâ´«¸ĞÆ÷,¼ì²âµ½ĞÅºÅ£¬³µ×ÓÏò×óÆ«Àë¹ìµÀ£¬ÏòÓÒ×ª  
-  printf("LEFT");
-  
-  right ();
-  }
-  else if (SR == LOW&&SL == LOW) {// ÓÒÑ­¼£ºìÍâ´«¸ĞÆ÷,¼ì²âµ½ĞÅºÅ£¬³µ×ÓÏò×óÆ«Àë¹ìµÀ£¬ÏòÓÒ×ª  
-  printf("back");
-  back(1);
-  turn(2);
-  }
-  else {// ¶¼ÊÇ°×É«, Í£Ö¹
- printf("STOP");
- brake();
- }
-  }
-
- 
-  return 0;
-
+    
+    // åˆå§‹åŒ–ç”µæœºæ§åˆ¶å¼•è„š
+    pinMode(1, OUTPUT); // IN1
+    pinMode(4, OUTPUT); // IN2
+    pinMode(5, OUTPUT); // IN3
+    pinMode(6, OUTPUT); // IN4
+    pinMode(LEFT, INPUT);  // è®¾ç½®å·¦ä¼ æ„Ÿå™¨ä¸ºè¾“å…¥æ¨¡å¼
+    pinMode(RIGHT, INPUT); // è®¾ç½®å³ä¼ æ„Ÿå™¨ä¸ºè¾“å…¥æ¨¡å¼
+    
+    // åˆå§‹åŒ– PWM æ§åˆ¶
+    softPwmCreate(1, 1, 500);   
+    softPwmCreate(4, 1, 500);
+    softPwmCreate(5, 1, 500);
+    softPwmCreate(6, 1, 500);
+    
+    while(1) {
+        // è¯»å–ä¼ æ„Ÿå™¨çŠ¶æ€
+        SR = digitalRead(RIGHT); // è¯»å–å³ä¾§ä¼ æ„Ÿå™¨æ•°æ®
+        SL = digitalRead(LEFT);  // è¯»å–å·¦ä¾§ä¼ æ„Ÿå™¨æ•°æ®
+        
+        if (SL == HIGH && SR == HIGH) { // ä¸¤ä¾§ä¼ æ„Ÿå™¨éƒ½æ£€æµ‹åˆ°é»‘çº¿ï¼Œå‰è¿›
+            printf("GO\n");
+            run();
+        } else if (SL == HIGH && SR == LOW) { // å³ä¾§åç¦»é»‘çº¿ï¼Œå‘å·¦ä¿®æ­£
+            printf("RIGHT\n");
+            left();
+        } else if (SR == HIGH && SL == LOW) { // å·¦ä¾§åç¦»é»‘çº¿ï¼Œå‘å³ä¿®æ­£
+            printf("LEFT\n");
+            right();
+        } else if (SR == LOW && SL == LOW) { // ä¸¤ä¾§éƒ½æœªæ£€æµ‹åˆ°é»‘çº¿ï¼Œåé€€å¹¶è°ƒæ•´æ–¹å‘
+            printf("BACK\n");
+            back(1);
+            turn(2);
+        } else { // å…¶ä»–æƒ…å†µï¼Œåœæ­¢
+            printf("STOP\n");
+            brake();
+        }
+    }
+    
+    return 0;
 }
 
