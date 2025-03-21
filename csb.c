@@ -7,15 +7,15 @@
 #include <sys/time.h>
 #include <wiringPi.h>
 
-#define Trig 28  // 超声波触发引脚
-#define Echo 29  // 超声波回响引脚
+#define Trig 28  // 超声波传感器的触发引脚
+#define Echo 29  // 超声波传感器的回响引脚
 #define BUFSIZE 512
 
 // 初始化超声波传感器
 void ultraInit(void)
 {
-    pinMode(Echo, INPUT);
-    pinMode(Trig, OUTPUT);
+    pinMode(Echo, INPUT);  // 设置回响引脚为输入模式
+    pinMode(Trig, OUTPUT); // 设置触发引脚为输出模式
 }
 
 // 测量距离，返回值单位为 cm
@@ -57,7 +57,7 @@ float disMeasure(void)
     return dis;
 }
 
-// 使小车前进，持续时间为 duration 毫秒
+// 机器人运动控制函数
 void run(int duration)
 {
     unsigned long start_time = millis();
@@ -70,7 +70,6 @@ void run(int duration)
     }
 }
 
-// 使小车停止
 void brake()
 {
     softPwmWrite(1, 0);
@@ -79,7 +78,6 @@ void brake()
     softPwmWrite(6, 0);
 }
 
-// 使小车左转，持续时间为 duration 毫秒
 void left(int duration)
 {
     unsigned long start_time = millis();
@@ -92,7 +90,6 @@ void left(int duration)
     }
 }
 
-// 使小车右转，持续时间为 duration 毫秒
 void right(int duration)
 {
     unsigned long start_time = millis();
@@ -105,7 +102,6 @@ void right(int duration)
     }
 }
 
-// 使小车后退，持续时间为 duration 毫秒
 void back(int duration)
 {
     unsigned long start_time = millis();
@@ -140,6 +136,8 @@ int main()
     softPwmCreate(4, 0, 500);
     softPwmCreate(5, 0, 500);
     softPwmCreate(6, 0, 500);
+
+    ultraInit(); // 初始化超声波传感器
 
     while (1)
     {

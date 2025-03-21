@@ -13,8 +13,8 @@
 // 定义传感器和电机控制的 GPIO 引脚编号
 #define Trig  28  // 超声波触发引脚
 #define Echo  29  // 超声波回响引脚
-#define LEFT  27  // 左侧传感器
-#define RIGHT 26  // 右侧传感器
+#define LEFT  27  // 左侧传感器（用于检测黑线）
+#define RIGHT 26  // 右侧传感器（用于检测黑线）
 #define BUFSIZE 512
 
 // 定义电机控制宏
@@ -75,15 +75,18 @@ int main(int argc, char *argv[]) {
     int SR, SL;
     
     // 初始化 WiringPi
-    wiringPiSetup();
+    if (wiringPiSetup() == -1) {
+        fprintf(stderr, "WiringPi 初始化失败！\n");
+        return 1;
+    }
     
     // 初始化电机控制引脚
     pinMode(1, OUTPUT); // IN1
     pinMode(4, OUTPUT); // IN2
     pinMode(5, OUTPUT); // IN3
     pinMode(6, OUTPUT); // IN4
-    pinMode(LEFT, INPUT);  // 设置左传感器为输入模式
-    pinMode(RIGHT, INPUT); // 设置右传感器为输入模式
+    pinMode(LEFT, INPUT);  // 设置左传感器为输入模式（用于检测黑线）
+    pinMode(RIGHT, INPUT); // 设置右传感器为输入模式（用于检测黑线）
     
     // 初始化 PWM 控制
     softPwmCreate(1, 1, 500);   
@@ -93,8 +96,8 @@ int main(int argc, char *argv[]) {
     
     while(1) {
         // 读取传感器状态
-        SR = digitalRead(RIGHT); // 读取右侧传感器数据
-        SL = digitalRead(LEFT);  // 读取左侧传感器数据
+        SR = digitalRead(RIGHT); // 读取右侧传感器数据（是否检测到黑线）
+        SL = digitalRead(LEFT);  // 读取左侧传感器数据（是否检测到黑线）
         
         if (SL == HIGH && SR == HIGH) { // 两侧传感器都检测到黑线，前进
             printf("GO\n");
@@ -117,4 +120,5 @@ int main(int argc, char *argv[]) {
     
     return 0;
 }
+
 

@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdio.h> 
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
@@ -8,7 +8,6 @@
 #include <time.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-
 #include <wiringPi.h>  // 树莓派 GPIO 控制库
 
 // 定义超声波传感器和红外传感器的引脚
@@ -106,4 +105,3 @@ int main(int argc, char *argv[]) {
     
     return 0;
 }
-

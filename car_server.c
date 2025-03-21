@@ -8,24 +8,33 @@
 #include <time.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-
+#include <signal.h>
 #include <pigpio.h> // 替换 wiringPi
 
 #define BUFSIZE 512
 
-// 电机控制宏
+// 电机控制宏定义
 #define MOTOR_GO_FORWARD   gpioWrite(1,1); gpioWrite(4,0); gpioWrite(5,1); gpioWrite(6,0)
 #define MOTOR_GO_BACK      gpioWrite(1,0); gpioWrite(4,1); gpioWrite(5,0); gpioWrite(6,1)
 #define MOTOR_GO_RIGHT     gpioWrite(1,1); gpioWrite(4,0); gpioWrite(5,0); gpioWrite(6,0)
 #define MOTOR_GO_LEFT      gpioWrite(1,0); gpioWrite(4,0); gpioWrite(5,1); gpioWrite(6,0)
 #define MOTOR_GO_STOP      gpioWrite(1,0); gpioWrite(4,0); gpioWrite(5,0); gpioWrite(6,0)
 
+// 客户端结构体
 typedef struct CLIENT {
     int fd;
     struct sockaddr_in addr;
 } CLIENT;
 
-void executeCommand(unsigned char command) {  // 提取重复的 switch 代码
+// 处理 SIGINT 信号，确保程序安全退出
+void handle_signal(int sig) {
+    gpioTerminate();
+    printf("\nServer shutting down...\n");
+    exit(EXIT_SUCCESS);
+}
+
+// 执行电机指令
+void executeCommand(unsigned char command) {
     switch(command) {
         case 0x01: MOTOR_GO_FORWARD; printf("forward\n"); break;
         case 0x02: MOTOR_GO_BACK;    printf("back\n"); break;
@@ -44,22 +53,27 @@ int main(int argc, char *argv[]) {
     socklen_t len;
     long portnumber;
     char buf[BUFSIZE];
-    int i, maxi = -1, k;
+    int i, maxi = -1;
     fd_set rset, allset;
     CLIENT client[FD_SETSIZE];
+
+    // 处理 SIGINT 信号，确保安全退出
+    signal(SIGINT, handle_signal);
 
     if(argc != 2) {
         fprintf(stderr, "Usage: %s <port>\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
+    // 解析端口号
     char *endptr;
-    portnumber = strtol(argv[1], &endptr, 10);  // 替换 atoi，增加输入检查
+    portnumber = strtol(argv[1], &endptr, 10);
     if (*endptr != '\0' || portnumber <= 0 || portnumber > 65535) {
         fprintf(stderr, "Invalid port number!\n");
         exit(EXIT_FAILURE);
     }
 
+    // 创建监听套接字
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
@@ -80,12 +94,12 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    if (gpioInitialise() < 0) {  // 替换 wiringPiSetup
+    if (gpioInitialise() < 0) {
         fprintf(stderr, "Failed to initialize GPIO\n");
         exit(EXIT_FAILURE);
     }
 
-    // 初始化 GPIO
+    // 初始化 GPIO 引脚
     for (i = 1; i <= 6; i++) gpioSetMode(i, PI_OUTPUT);
     gpioSetMode(3, PI_OUTPUT);
     MOTOR_GO_STOP;
@@ -97,7 +111,7 @@ int main(int argc, char *argv[]) {
 
     while (1) {
         rset = allset;
-        tv.tv_sec = 1;  // 调整等待时间，提高 CPU 效率
+        tv.tv_sec = 1;  // 超时设置，减少 CPU 负载
         tv.tv_usec = 0;
 
         ret = select(maxfd + 1, &rset, NULL, NULL, &tv);
@@ -108,7 +122,8 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if (FD_ISSET(listenfd, &rset)) {  // 处理新连接
+        // 处理新连接
+        if (FD_ISSET(listenfd, &rset)) {
             len = sizeof(client_addr);
             connectfd = accept(listenfd, (struct sockaddr *)(&client_addr), &len);
             if (connectfd == -1) {
@@ -129,12 +144,13 @@ int main(int argc, char *argv[]) {
             if (i > maxi) maxi = i;
         }
 
+        // 处理客户端数据
         for (i = 0; i <= maxi; i++) {
             if ((sockfd = client[i].fd) < 0) continue;
             if (FD_ISSET(sockfd, &rset)) {
                 memset(buf, 0, BUFSIZE);
                 if ((ret = read(sockfd, buf, BUFSIZE - 1)) > 0) {
-                    buf[ret] = '\0';  // 避免缓冲区溢出
+                    buf[ret] = '\0';
                     if (ret == 5 || ret == 6) {
                         if (buf[1] == 0x00) executeCommand(buf[2]);
                         else MOTOR_GO_STOP;
@@ -146,13 +162,13 @@ int main(int argc, char *argv[]) {
                     printf("Client disconnected\n");
                     close(sockfd);
                     FD_CLR(sockfd, &allset);
-                    memset(&client[i], 0, sizeof(CLIENT));  // 释放资源
+                    memset(&client[i], 0, sizeof(CLIENT));
                 }
             }
         }
     }
 
     close(listenfd);
-    gpioTerminate(); // 关闭 GPIO
+    gpioTerminate();
     return 0;
 }
