@@ -1,0 +1,53 @@
+import serial
+import time
+import sys
+import tty
+import termios
+
+# 修改成你的串口号，例如 "/dev/ttyACM0" 或 "/dev/ttyUSB0"
+PORT = "/dev/ttyACM0"
+BAUD = 9600
+
+# 初始化串口连接
+try:
+    ser = serial.Serial(PORT, BAUD, timeout=1)
+    time.sleep(2)  # 等待 Arduino 重启
+    print(f"✅ Connected to Arduino on {PORT} at {BAUD} baud")
+except serial.SerialException:
+    print(f"❌ Could not open port {PORT}")
+    sys.exit()
+
+# 读取一个按键（非阻塞、无需回车）
+def get_key():
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd)
+        return sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
+
+# 主控制循环
+print("🎮 控制指令：w=前进 s=后退 a=左转 d=右转 q=停止 +=加速 -=减速")
+print("🛑 按 ESC 或 Ctrl+C 退出程序")
+
+try:
+    while True:
+        key = get_key()
+
+        if key == '\x1b':  # ESC 键
+            print("🚪 退出程序")
+            break
+
+        if key in ['w', 's', 'a', 'd', 'q', '+', '-']:
+            ser.write(key.encode())
+            print(f"➡️ 发送指令: {key}")
+        else:
+            print(f"⚠️ 无效输入: {key}")
+
+except KeyboardInterrupt:
+    print("\n🛑 手动中断，退出程序")
+
+finally:
+    ser.close()
+    print("🔌 串口已关闭")
