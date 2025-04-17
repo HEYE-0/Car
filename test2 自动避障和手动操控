@@ -5,7 +5,6 @@
 
 using namespace std;
 
-// 串口设置函数
 int openSerialPort(const char* portName) {
     int serial = open(portName, O_RDWR | O_NOCTTY | O_SYNC);
     if (serial < 0) {
@@ -44,20 +43,12 @@ int openSerialPort(const char* portName) {
 }
 
 int main() {
-    const char* port = "/dev/ttyACM0";  // 根据实际设备改为 ttyUSB0 或 ttyACM1 等
+    const char* port = "/dev/ttyACM0";  // 修改为你的串口名
     int serial = openSerialPort(port);
     if (serial < 0) return 1;
 
     cout << "✅ Connected to Arduino on " << port << endl;
-    cout << "🎮 Control keys:" << endl;
-    cout << "  w = forward" << endl;
-    cout << "  s = backward" << endl;
-    cout << "  a = turn left" << endl;
-    cout << "  d = turn right" << endl;
-    cout << "  q = stop" << endl;
-    cout << "  o = manual mode" << endl;
-    cout << "  p = auto avoid mode" << endl;
-    cout << "  x = exit" << endl;
+    cout << "🎮 Controls: w/a/s/d/q = movement | o = manual mode | p = auto avoid | x = exit" << endl;
 
     while (true) {
         cout << "\nEnter command > ";
@@ -66,8 +57,8 @@ int main() {
 
         if (cmd == 'x') break;
 
-        if (cmd == 'w' || cmd == 's' || cmd == 'a' || cmd == 'd' ||
-            cmd == 'q' || cmd == 'o' || cmd == 'p') {
+        if (cmd == 'w' || cmd == 'a' || cmd == 's' || cmd == 'd' ||
+            cmd == 'o' || cmd == 'p' || cmd == 'q') {
             write(serial, &cmd, 1);
             cout << "➡️ Sent command: " << cmd << endl;
         } else {
@@ -76,6 +67,6 @@ int main() {
     }
 
     close(serial);
-    cout << "🔌 Serial port closed. Exiting." << endl;
+    cout << "🔌 Serial port closed." << endl;
     return 0;
 }
