@@ -1,0 +1,81 @@
+#include <iostream>
+#include <termios.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+using namespace std;
+
+// 串口设置函数
+int openSerialPort(const char* portName) {
+    int serial = open(portName, O_RDWR | O_NOCTTY | O_SYNC);
+    if (serial < 0) {
+        perror("❌ Failed to open serial port");
+        return -1;
+    }
+
+    struct termios tty;
+    if (tcgetattr(serial, &tty) != 0) {
+        perror("tcgetattr failed");
+        close(serial);
+        return -1;
+    }
+
+    cfsetospeed(&tty, B9600);
+    cfsetispeed(&tty, B9600);
+    tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;
+    tty.c_iflag &= ~IGNBRK;
+    tty.c_lflag = 0;
+    tty.c_oflag = 0;
+    tty.c_cc[VMIN] = 0;
+    tty.c_cc[VTIME] = 5;
+    tty.c_iflag &= ~(IXON | IXOFF | IXANY);
+    tty.c_cflag |= (CLOCAL | CREAD);
+    tty.c_cflag &= ~(PARENB | PARODD);
+    tty.c_cflag &= ~CSTOPB;
+    tty.c_cflag &= ~CRTSCTS;
+
+    if (tcsetattr(serial, TCSANOW, &tty) != 0) {
+        perror("tcsetattr failed");
+        close(serial);
+        return -1;
+    }
+
+    return serial;
+}
+
+int main() {
+    const char* port = "/dev/ttyACM0";  // 根据实际设备改为 ttyUSB0 或 ttyACM1 等
+    int serial = openSerialPort(port);
+    if (serial < 0) return 1;
+
+    cout << "✅ Connected to Arduino on " << port << endl;
+    cout << "🎮 Control keys:" << endl;
+    cout << "  w = forward" << endl;
+    cout << "  s = backward" << endl;
+    cout << "  a = turn left" << endl;
+    cout << "  d = turn right" << endl;
+    cout << "  q = stop" << endl;
+    cout << "  o = manual mode" << endl;
+    cout << "  p = auto avoid mode" << endl;
+    cout << "  x = exit" << endl;
+
+    while (true) {
+        cout << "\nEnter command > ";
+        char cmd;
+        cin >> cmd;
+
+        if (cmd == 'x') break;
+
+        if (cmd == 'w' || cmd == 's' || cmd == 'a' || cmd == 'd' ||
+            cmd == 'q' || cmd == 'o' || cmd == 'p') {
+            write(serial, &cmd, 1);
+            cout << "➡️ Sent command: " << cmd << endl;
+        } else {
+            cout << "⚠️ Invalid command." << endl;
+        }
+    }
+
+    close(serial);
+    cout << "🔌 Serial port closed. Exiting." << endl;
+    return 0;
+}
