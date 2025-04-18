@@ -1,0 +1,83 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <thread>
+#include <chrono>
+#include <fcntl.h>
+#include <termios.h>
+#include <unistd.h>
+
+using namespace std;
+
+// 串口路径（可按需修改）
+const char* SERIAL_PORT = "/dev/ttyUSB0";  // 或 "/dev/ttyAMA0"、"/dev/serial0"
+
+int openSerial(const char* port) {
+    int serial = open(port, O_RDWR | O_NOCTTY | O_NDELAY);
+    if (serial == -1) {
+        cerr << "❌ 无法打开串口 " << port << endl;
+        return -1;
+    }
+
+    struct termios options;
+    tcgetattr(serial, &options);
+    cfsetispeed(&options, B9600);  // 波特率
+    cfsetospeed(&options, B9600);
+
+    options.c_cflag |= (CLOCAL | CREAD);    // 启动串口接收
+    options.c_cflag &= ~PARENB;             // 无校验
+    options.c_cflag &= ~CSTOPB;             // 1位停止位
+    options.c_cflag &= ~CSIZE;
+    options.c_cflag |= CS8;                 // 8位数据位
+    options.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);  // 原始模式
+    options.c_oflag &= ~OPOST;              // 原始输出模式
+
+    tcsetattr(serial, TCSANOW, &options);
+    return serial;
+}
+
+void sendCommand(int serial, char cmd) {
+    write(serial, &cmd, 1);
+    cout << "📤 已发送命令：" << cmd << endl;
+}
+
+void readFromArduino(int serial) {
+    char buf[256];
+    int len;
+
+    while (true) {
+        len = read(serial, buf, sizeof(buf) - 1);
+        if (len > 0) {
+            buf[len] = '\0';
+            cout << "📥 Arduino回传：" << buf;
+        }
+        this_thread::sleep_for(chrono::milliseconds(100));
+    }
+}
+
+int main() {
+    int serial = openSerial(SERIAL_PORT);
+    if (serial == -1) return 1;
+
+    cout << "✅ 串口连接成功：" << SERIAL_PORT << endl;
+
+    // 1. 等待 Arduino 启动
+    this_thread::sleep_for(chrono::seconds(2));
+
+    // 2. 切换至自动避障模式（发送 'p'）
+    sendCommand(serial, 'p');
+
+    // 3. 启动后台线程读取 Arduino 输出
+    thread reader(readFromArduino, serial);
+
+    // 4. 主线程保持运行（可拓展为键盘遥控等）
+    while (true) {
+        this_thread::sleep_for(chrono::seconds(1));
+        // 可添加网页交互、定时任务等逻辑
+    }
+
+    // 不会执行到这一步，但建议完整性
+    reader.join();
+    close(serial);
+    return 0;
+}
