@@ -5,7 +5,7 @@ from flask import Flask, render_template
 import threading
 
 # 修改为你的串口号
-SERIAL_PORT = '/dev/ttyUSB0'
+SERIAL_PORT = '/dev/ttyACM0'
 BAUDRATE = 9600
 
 # 初始化串口
