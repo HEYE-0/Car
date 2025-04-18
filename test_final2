@@ -1,0 +1,116 @@
+#include <iostream>
+#include <thread>
+#include <chrono>
+#include <fcntl.h>
+#include <termios.h>
+#include <unistd.h>
+#include <string>
+#include <atomic>
+#include <csignal>
+
+using namespace std;
+
+int serial_port;
+atomic<bool> running(true);
+
+// 初始化串口
+bool setupSerial(const string& port_name = "/dev/ttyACM0", int baud_rate = B9600) {
+    serial_port = open(port_name.c_str(), O_RDWR);
+    if (serial_port < 0) {
+        perror("❌ Cannot open serial port");
+        return false;
+    }
+
+    termios tty;
+    tcgetattr(serial_port, &tty);
+    tty.c_cflag = baud_rate | CS8 | CLOCAL | CREAD;
+    tty.c_iflag = IGNPAR;
+    tty.c_oflag = 0;
+    tty.c_lflag = 0;
+    tty.c_cc[VTIME] = 0;
+    tty.c_cc[VMIN] = 1;
+    tcflush(serial_port, TCIFLUSH);
+    tcsetattr(serial_port, TCSANOW, &tty);
+
+    return true;
+}
+
+// 发送命令
+void sendCommand(char cmd) {
+    write(serial_port, &cmd, 1);
+}
+
+// 读取 Arduino 的距离信息
+void readArduino() {
+    char buf[256];
+    while (running) {
+        int n = read(serial_port, buf, sizeof(buf) - 1);
+        if (n > 0) {
+            buf[n] = '\0';
+            cout << buf;
+            cout.flush();
+        }
+    }
+}
+
+// 设置终端为非阻塞、非回显模式
+void enableKeyboardInput(termios& oldt) {
+    termios newt;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);  // 关闭标准输入模式和回显
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+}
+
+// 恢复终端模式
+void restoreKeyboardInput(const termios& oldt) {
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+}
+
+// 处理 Ctrl+C 信号
+void handleSignal(int signal) {
+    running = false;
+    close(serial_port);
+    cout << "\n🚪 程序已退出。\n";
+    exit(0);
+}
+
+int main() {
+    signal(SIGINT, handleSignal); // 捕获 Ctrl+C
+
+    if (!setupSerial()) return 1;
+    this_thread::sleep_for(chrono::seconds(2)); // 等待 Arduino 启动
+
+    sendCommand('p'); // 初始自动模式
+    cout << "🚗 自动避障模式已启动 (按 m 切换手动)\n";
+
+    // 开线程读取 Arduino 信息
+    thread reader(readArduino);
+
+    termios oldt;
+    enableKeyboardInput(oldt);
+
+    while (running) {
+        if (read(STDIN_FILENO, &char key, 1) == 1) {
+            switch (key) {
+                case 'w': sendCommand('w'); cout << "↑ 前进\n"; break;
+                case 's': sendCommand('s'); cout << "↓ 后退\n"; break;
+                case 'a': sendCommand('a'); cout << "← 左转\n"; break;
+                case 'd': sendCommand('d'); cout << "→ 右转\n"; break;
+                case 'q': sendCommand('q'); cout << "⛔ 停止\n"; break;
+                case 'p': sendCommand('p'); cout << "🚗 自动模式启动\n"; break;
+                case 'm': sendCommand('o'); cout << "🎮 手动模式启动\n"; break;
+                case 27:  // ESC
+                    running = false;
+                    cout << "🛑 ESC 退出程序\n";
+                    break;
+            }
+        }
+        this_thread::sleep_for(chrono::milliseconds(50));
+    }
+
+    reader.join();
+    restoreKeyboardInput(oldt);
+    close(serial_port);
+    return 0;
+}
