@@ -70,7 +70,7 @@ void followAruco() {
     Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50);
     aruco::DetectorParameters params;
     int lost_counter = 0;
-    const int max_lost = 10;
+    const int max_lost = 60;
     char last_cmd = 'q';
 
     while (running) {
@@ -118,6 +118,7 @@ void followAruco() {
 
         if (lost_counter >= max_lost) {
             cmd = 'q';
+            cout<<"target not found\n";
             tagFound = false;
         }
 
