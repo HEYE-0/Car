@@ -59,7 +59,7 @@ void readArduino() {
     }
 }
 
-// 摄像头跟踪线程
+// 摄像头跟踪线程（带图像显示）
 void followAruco() {
     VideoCapture cap(0);
     if (!cap.isOpened()) {
@@ -106,6 +106,9 @@ void followAruco() {
 
                 lost_counter = 0;
                 tagFound = true;
+
+                aruco::drawDetectedMarkers(frame, corners, ids);
+                circle(frame, center, 6, Scalar(0, 255, 0), -1);
             } else {
                 lost_counter++;
             }
@@ -123,11 +126,17 @@ void followAruco() {
             last_cmd = cmd;
         }
 
+        // 显示图像窗口
+        imshow("Tracking View", frame);
+        if (waitKey(1) == 27) break;
+
         this_thread::sleep_for(chrono::milliseconds(50));
     }
 
     cap.release();
+    destroyWindow("Tracking View");
 }
+
 
 // 非阻塞键盘模式
 void enableKeyboardInput(termios& oldt) {
