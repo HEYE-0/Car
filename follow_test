@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
@@ -87,30 +86,27 @@ int main() {
                     direction = "Forward";
                 }
 
-                aruco::drawDetectedMarkers(frame, corners, ids);
-                circle(frame, center, 6, Scalar(0, 255, 0), -1);
                 status = "ID 5 detected";
-                putText(frame, "Center X: " + to_string((int)center.x), Point(10, 60), FONT_HERSHEY_SIMPLEX, 0.6, Scalar(255, 255, 255), 2);
+                cout << "📍 Status: " << status
+                     << " | Direction: " << direction
+                     << " | Center X: " << (int)center.x << endl;
+            } else {
+                cout << "⚠️  ID 5 not found (other markers detected)" << endl;
             }
+        } else {
+            cout << "🔍 No markers detected" << endl;
         }
 
-        // 发送命令（只有变更时才发）
         if (cmd != last_cmd) {
             sendCommand(serial_port, cmd);
             last_cmd = cmd;
         }
 
-        // 图像叠加调试文字
-        putText(frame, "Status: " + status, Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.6, Scalar(0, 255, 255), 2);
-        putText(frame, "Direction: " + direction, Point(10, 40), FONT_HERSHEY_SIMPLEX, 0.6, Scalar(0, 255, 255), 2);
-
-        imshow("Follow Debug View", frame);
         if (waitKey(1) == 27) break;  // ESC退出
     }
 
     sendCommand(serial_port, 'q'); // 退出时停车
     cap.release();
     close(serial_port);
-    destroyAllWindows();
     return 0;
 }
