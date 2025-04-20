@@ -2,30 +2,27 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>智能小车控制</title>
-  <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-    button { width: 80px; height: 80px; font-size: 24px; margin: 10px; }
-  </style>
+  <title>小车控制网页</title>
 </head>
 <body>
-  <h1>🚗 小车控制面板</h1>
-  <div>
-    <button onclick="send('w')">↑</button><br>
-    <button onclick="send('a')">←</button>
-    <button onclick="send('q')">■</button>
-    <button onclick="send('d')">→</button><br>
-    <button onclick="send('s')">↓</button>
-  </div>
-
+  <h1>🚗 控制小车</h1>
+  <button onclick="sendCmd('w')">↑ 前进</button>
+  <button onclick="sendCmd('a')">← 左转</button>
+  <button onclick="sendCmd('s')">↓ 后退</button>
+  <button onclick="sendCmd('d')">→ 右转</button>
+  <button onclick="sendCmd('q')">■ 停止</button>
   <script>
-    let ws = new WebSocket("ws://" + location.hostname + ":6789");
-    ws.onopen = () => console.log("✅ WebSocket connected");
-
-    function send(cmd) {
-      ws.send(cmd);
-      console.log("➡️ Sent:", cmd);
+    function sendCmd(cmd) {
+      fetch('/control', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'cmd=' + cmd
+      });
     }
+    document.addEventListener('keydown', function (e) {
+      const key = e.key.toLowerCase();
+      if ('wasdq'.includes(key)) sendCmd(key);
+    });
   </script>
 </body>
 </html>
