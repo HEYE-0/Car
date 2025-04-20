@@ -57,7 +57,11 @@ int main() {
     while (true) {
         Mat frame;
         cap >> frame;
-        if (frame.empty()) continue;
+        if (frame.empty()) {
+            cerr << "⚠️ Empty frame!" << endl;
+            continue;
+        }
+        cout << "✅ Captured frame: " << frame.cols << "x" << frame.rows << endl;
 
         vector<int> ids;
         vector<vector<Point2f>> corners;
