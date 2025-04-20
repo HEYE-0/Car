@@ -1,0 +1,116 @@
+
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <opencv2/aruco.hpp>
+#include <fcntl.h>
+#include <termios.h>
+#include <unistd.h>
+#include <vector>
+
+using namespace std;
+using namespace cv;
+
+int setupSerial(const string& port_name = "/dev/ttyACM0", int baud_rate = B9600) {
+    int serial_port = open(port_name.c_str(), O_RDWR);
+    if (serial_port < 0) {
+        perror("❌ Cannot open serial port");
+        return -1;
+    }
+
+    termios tty;
+    tcgetattr(serial_port, &tty);
+    tty.c_cflag = baud_rate | CS8 | CLOCAL | CREAD;
+    tty.c_iflag = IGNPAR;
+    tty.c_oflag = 0;
+    tty.c_lflag = 0;
+    tty.c_cc[VTIME] = 0;
+    tty.c_cc[VMIN] = 1;
+    tcflush(serial_port, TCIFLUSH);
+    tcsetattr(serial_port, TCSANOW, &tty);
+    return serial_port;
+}
+
+void sendCommand(int serial_port, char cmd) {
+    write(serial_port, &cmd, 1);
+    cout << "➡️ Sent: " << cmd << endl;
+}
+
+int main() {
+    int serial_port = setupSerial();
+    if (serial_port < 0) return 1;
+
+    VideoCapture cap(0);
+    if (!cap.isOpened()) {
+        cerr << "❌ Cannot open camera" << endl;
+        return -1;
+    }
+
+    sendCommand(serial_port, 'f');  // 通知 Arduino 进入跟随模式
+
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50);
+    aruco::DetectorParameters params;
+
+    const int frame_width = static_cast<int>(cap.get(CAP_PROP_FRAME_WIDTH));
+    const int tolerance = 50;
+    const int center_x = frame_width / 2;
+    char last_cmd = 'q';
+
+    while (true) {
+        Mat frame;
+        cap >> frame;
+        if (frame.empty()) continue;
+
+        vector<int> ids;
+        vector<vector<Point2f>> corners;
+        aruco::detectMarkers(frame, dictionary, corners, ids, &params);
+
+        string status = "No target";
+        string direction = "Stop";
+        char cmd = 'q';
+
+        if (!ids.empty()) {
+            auto it = find(ids.begin(), ids.end(), 5);
+            if (it != ids.end()) {
+                int idx = distance(ids.begin(), it);
+                Point2f center(0, 0);
+                for (const auto& pt : corners[idx]) center += pt;
+                center /= 4.0f;
+
+                if (center.x < center_x - tolerance) {
+                    cmd = 'a';
+                    direction = "Left";
+                } else if (center.x > center_x + tolerance) {
+                    cmd = 'd';
+                    direction = "Right";
+                } else {
+                    cmd = 'w';
+                    direction = "Forward";
+                }
+
+                aruco::drawDetectedMarkers(frame, corners, ids);
+                circle(frame, center, 6, Scalar(0, 255, 0), -1);
+                status = "ID 5 detected";
+                putText(frame, "Center X: " + to_string((int)center.x), Point(10, 60), FONT_HERSHEY_SIMPLEX, 0.6, Scalar(255, 255, 255), 2);
+            }
+        }
+
+        // 发送命令（只有变更时才发）
+        if (cmd != last_cmd) {
+            sendCommand(serial_port, cmd);
+            last_cmd = cmd;
+        }
+
+        // 图像叠加调试文字
+        putText(frame, "Status: " + status, Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.6, Scalar(0, 255, 255), 2);
+        putText(frame, "Direction: " + direction, Point(10, 40), FONT_HERSHEY_SIMPLEX, 0.6, Scalar(0, 255, 255), 2);
+
+        imshow("Follow Debug View", frame);
+        if (waitKey(1) == 27) break;  // ESC退出
+    }
+
+    sendCommand(serial_port, 'q'); // 退出时停车
+    cap.release();
+    close(serial_port);
+    destroyAllWindows();
+    return 0;
+}
