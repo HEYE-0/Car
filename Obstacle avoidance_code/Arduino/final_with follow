@@ -25,7 +25,7 @@
 #define M2B_EN 11
 
 int speedMotor = 80;
-char mode = 'a';       // 当前模式：a=自动，m=手动，f=跟随
+char mode = 'p';       // 当前模式：p=自动，m=手动，f=跟随
 char follow_cmd = 'q'; // 跟随模式中的指令（来自树莓派）
 
 // 控制函数封装
@@ -55,7 +55,7 @@ void loop() {
   if (Serial.available()) {
     char cmd = Serial.read();
 
-    if (cmd == 'a' || cmd == 'm' || cmd == 'f') {
+    if (cmd == 'p' || cmd == 'm' || cmd == 'f') {
       mode = cmd;
       Serial.print("🔁 Mode switched to: "); Serial.println(mode);
     } else if (mode == 'm') {
@@ -65,7 +65,7 @@ void loop() {
     }
   }
 
-  if (mode == 'a') handleAuto();
+  if (mode == 'p') handleAuto();
   else if (mode == 'f') handleFollow();
 }
 
