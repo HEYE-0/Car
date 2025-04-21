@@ -38,7 +38,7 @@ Use serial commands to control the car's movements:
 
 3.3 Switch to automatic mode
 - 'p': enter automatic obstacle avoidance/following mode
-- 'o': exit automatic mode and return to manual control
+- 'm': exit automatic mode and return to manual control
 
 3.4 Web control
 After launching the web service on the Raspberry Pi, you can visit:
