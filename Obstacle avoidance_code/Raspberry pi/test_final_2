@@ -91,22 +91,22 @@ int main() {
     enableKeyboardInput(oldt);
 
     while (running) {
-        char key;
-        if (read(STDIN_FILENO, &key, 1) == 1) {
-            switch (key) {
-                case 'w': sendCommand('w'); cout << "↑ 前进\n"; break;
-                case 's': sendCommand('s'); cout << "↓ 后退\n"; break;
-                case 'a': sendCommand('a'); cout << "← 左转\n"; break;
-                case 'd': sendCommand('d'); cout << "→ 右转\n"; break;
-                case 'q': sendCommand('q'); cout << "⛔ 停止\n"; break;
-                case 'p': sendCommand('p'); cout << "🚗 自动模式启动\n"; break;
-                case 'm': sendCommand('o'); cout << "🎮 手动模式启动\n"; break;
-                case 27:  // ESC
-                    running = false;
-                    cout << "🛑 ESC 退出程序\n";
-                    break;
-            }
+    char key;
+    if (read(STDIN_FILENO, &key, 1) == 1) {
+        switch (key) {
+            case 'w': sendCommand('w'); cout << "↑ 前进\n"; break;
+            case 's': sendCommand('s'); cout << "↓ 后退\n"; break;
+            case 'a': sendCommand('a'); cout << "← 左转\n"; break;
+            case 'd': sendCommand('d'); cout << "→ 右转\n"; break;
+            case 'q': sendCommand('q'); cout << "⛔ 停止\n"; break;
+            case 'p': sendCommand('p'); cout << "🚗 自动模式启动\n"; break;
+            case 'm': sendCommand('o'); cout << "🎮 手动模式启动\n"; break;
+            case 27:  // ESC
+                running = false;
+                cout << "🛑 ESC 退出程序\n";
+                break;
         }
+    }
         this_thread::sleep_for(chrono::milliseconds(50));
     }
 
