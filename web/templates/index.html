@@ -2,15 +2,100 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>小车控制网页</title>
+  <title>🚗 Car Control Panel</title>
+  <style>
+    body {
+      background: #f3f4f6;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 30px 10px;
+    }
+    h1 {
+      color: #1f2937;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 120px 120px 120px;
+      grid-template-rows: repeat(3, 70px);
+      gap: 15px;
+      justify-content: center;
+      margin: 30px 0;
+    }
+    .modes {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .btn {
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+      transition: background-color 0.2s;
+    }
+    .btn:hover {
+      background-color: #2563eb;
+    }
+    .btn-large {
+      width: 120px;
+      height: 70px;
+    }
+    .info-box {
+      background-color: #e5e7eb;
+      display: inline-block;
+      padding: 15px 25px;
+      border-radius: 10px;
+      text-align: left;
+      color: #111827;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>🚗 控制小车</h1>
-  <button onclick="sendCmd('w')">↑ 前进</button>
-  <button onclick="sendCmd('a')">← 左转</button>
-  <button onclick="sendCmd('s')">↓ 后退</button>
-  <button onclick="sendCmd('d')">→ 右转</button>
-  <button onclick="sendCmd('q')">■ 停止</button>
+  <h1>🚗 Car Control Panel</h1>
+  <p>Use buttons or keyboard keys to control your car</p>
+
+  <!-- 方向控制按钮排布 -->
+  <div class="grid">
+    <div></div>
+    <button class="btn btn-large" onclick="sendCmd('w')">⬆ W<br>(Forward)</button>
+    <div></div>
+
+    <button class="btn btn-large" onclick="sendCmd('a')">⬅ A<br>(Left)</button>
+    <button class="btn btn-large" onclick="sendCmd('s')">⬇ S<br>(Backward)</button>
+    <button class="btn btn-large" onclick="sendCmd('d')">➡ D<br>(Right)</button>
+
+    <div></div>
+    <button class="btn btn-large" onclick="sendCmd('q')">⛔ Q<br>(Stop)</button>
+    <div></div>
+  </div>
+
+  <!-- 模式按钮 -->
+  <div class="modes">
+    <button class="btn btn-large" onclick="sendCmd('m')">🕹 M<br>(Manual)</button>
+    <button class="btn btn-large" onclick="sendCmd('f')">🧍 F<br>(Follow)</button>
+    <button class="btn btn-large" onclick="sendCmd('p')">🤖 P<br>(Auto)</button>
+  </div>
+
+  <!-- 键盘快捷键说明 -->
+  <div class="info-box">
+    <strong>Keyboard Shortcuts:</strong><br>
+    W = Move Forward<br>
+    A = Turn Left<br>
+    S = Move Backward<br>
+    D = Turn Right<br>
+    Q = Stop<br>
+    M = Manual Mode<br>
+    F = Follow Mode<br>
+    P = Auto Mode
+  </div>
+
   <script>
     function sendCmd(cmd) {
       fetch('/control', {
@@ -19,9 +104,10 @@
         body: 'cmd=' + cmd
       });
     }
+
     document.addEventListener('keydown', function (e) {
       const key = e.key.toLowerCase();
-      if ('wasdq'.includes(key)) sendCmd(key);
+      if ('wasdqmpf'.includes(key)) sendCmd(key);
     });
   </script>
 </body>
