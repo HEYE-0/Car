@@ -16,7 +16,7 @@ int main() {
         return -1;
     }
 
-    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_50);
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_1000);
     aruco::DetectorParameters params;
 
     while (true) {
