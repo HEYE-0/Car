@@ -8,7 +8,7 @@ using namespace std;
 using namespace cv;
 
 int main() {
-    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_50);
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_1000);
 
     while (true) {
         // 拍一张图像
