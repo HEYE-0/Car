@@ -1,48 +1,50 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 using namespace std;
 using namespace cv;
 
 int main() {
-    VideoCapture cap(0);  // 默认摄像头
+    cout << "🎯 Starting ArUco periodic detection..." << endl;
+
+    VideoCapture cap(0);  // 打开摄像头
     if (!cap.isOpened()) {
         cerr << "❌ Cannot open camera" << endl;
         return -1;
     }
 
-    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_1000);
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_50);
     aruco::DetectorParameters params;
 
-    cout << "🎯 Starting headless ArUco detection... Press Ctrl+C to quit.\n";
-
     while (true) {
-        cout << " get into loop" <<endl;
         Mat frame;
         cap >> frame;
-        if (frame.empty()) continue;
 
+        if (frame.empty()) {
+            cerr << "⚠️ Empty frame, skipping...\n";
+            this_thread::sleep_for(chrono::seconds(3));
+            continue;
+        }
+
+        // 检测 ArUco 标签
         vector<int> ids;
         vector<vector<Point2f>> corners;
         aruco::detectMarkers(frame, dictionary, corners, ids, &params);
 
         if (!ids.empty()) {
-            for (size_t i = 0; i < ids.size(); i++) {
-                Point2f center(0, 0);
-                for (const auto& pt : corners[i]) center += pt;
-                center /= 4.0f;
-
-                cout << "✅ Detected ID: " << ids[i]
-                     << " at center (" << center.x << ", " << center.y << ")\n";
-            }
+            cout << "✅ Detected marker IDs: ";
+            for (int id : ids) cout << id << " ";
+            cout << endl;
         } else {
-            cout << "🚫 No marker detected." << endl;
+            cout << "❌ No marker detected." << endl;
         }
 
-        this_thread::sleep_for(chrono::milliseconds(300));  // 限制刷新频率
+        // 每隔 3 秒检测一次
+        this_thread::sleep_for(chrono::seconds(3));
     }
 
-    cap.release();
     return 0;
 }
