@@ -8,18 +8,24 @@ Additionally, the car supports manual control mode, allowing human intervention 
 
 The project is developed on an Ubuntu system, with core control logic written in C++, and the web control interface developed using Python, balancing real-time performance and scalability.
 2. Project Structure
+
+```
 Car/
-├── Camera/                   # Camera image processing module  
-├── Obstacle avoidance_code/ # Ultrasonic obstacle avoidance control code  
-├── shoe_follow_project/     # Target-following implementation  
-├── follow_change/           # Follow module update logs  
-├── follow_test/             # Follow feature testing scripts  
-├── web/                     # Web-based remote control interface (Flask)  
-├── Tutorial/                # Tutorials and user documentation  
-├── .vscode/                 # VS Code configuration  
-├── venv/                    # Python virtual environment  
-├── .gitignore               # Git ignore rules  
-└── README.md                # Project description file
+├── Arduino/                 # Arduino control scripts
+├── Camera/                  # Camera image processing module
+├── Obstacle_avoidance_code/ # Ultrasonic obstacle avoidance logic
+├── shoe_follow_project/     # Target following functionality
+├── follow_change/           # Update history of the following module
+├── follow_test/             # Testing scripts for target following
+├── web/                     # Web-based control interface (Flask)
+├── Tutorial/                # Tutorials and documentation
+├── .vscode/                 # VS Code configuration
+├── venv/                    # Python virtual environment
+├── .gitignore               # Git ignore configuration
+└── README.md                # Project documentation
+
+```
+
 3. Installation & Usage
 The project is deployed on a Raspberry Pi system and supports three control modes: automatic obstacle avoidance, target following, and manual remote control. The core motion control is executed via an Arduino.
 
