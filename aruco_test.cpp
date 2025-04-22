@@ -1,6 +1,6 @@
-#include <iostream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
+#include <iostream>
 #include <thread>
 #include <chrono>
 
@@ -8,43 +8,33 @@ using namespace std;
 using namespace cv;
 
 int main() {
-    cout << "🎯 Starting periodic ArUco marker detection...\n";
-
-    // 打开摄像头
-    VideoCapture cap(0); // 改为你的摄像头编号
-    if (!cap.isOpened()) {
-        cerr << "❌ Failed to open camera\n";
-        return -1;
-    }
-
-    // 使用 5x5 的 ArUco 字典，包含 ID 为 5 的图案
     Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_50);
-    Ptr<aruco::DetectorParameters> parameters = aruco::DetectorParameters::create();
 
     while (true) {
-        Mat frame;
-        cap >> frame;
+        // 拍一张图像
+        system("libcamera-still -n -o temp.jpg --width 640 --height 480");
+
+        // 加载图像
+        Mat frame = imread("temp.jpg");
         if (frame.empty()) {
-            cerr << "⚠️  Empty frame captured.\n";
+            cout << "⚠️ Failed to load captured image\n";
             continue;
         }
 
+        // 检测 ArUco
         vector<int> ids;
         vector<vector<Point2f>> corners;
-        aruco::detectMarkers(frame, dictionary, corners, ids, parameters);
+        aruco::detectMarkers(frame, dictionary, corners, ids);
 
         if (!ids.empty()) {
-            cout << "✅ Detected marker IDs: ";
-            for (int id : ids) {
-                cout << id << " ";
-            }
+            cout << "🎯 Detected ArUco IDs: ";
+            for (int id : ids) cout << id << " ";
             cout << endl;
         } else {
-            cout << "❌ No marker detected.\n";
+            cout << "❌ No ArUco markers found\n";
         }
 
-        // 每 3 秒检测一次
-        this_thread::sleep_for(chrono::seconds(3));
+        this_thread::sleep_for(chrono::seconds(3)); // 每 3 秒检测一次
     }
 
     return 0;
