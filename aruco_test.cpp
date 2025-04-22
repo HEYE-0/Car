@@ -16,7 +16,7 @@ int main() {
         return -1;
     }
 
-    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_1000);
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_50);
     aruco::DetectorParameters params;
 
     while (true) {
@@ -29,7 +29,6 @@ int main() {
             continue;
         }
 
-        // 检测 ArUco 标签
         vector<int> ids;
         vector<vector<Point2f>> corners;
         aruco::detectMarkers(frame, dictionary, corners, ids, &params);
@@ -42,7 +41,6 @@ int main() {
             cout << "❌ No marker detected." << endl;
         }
 
-        // 每隔 3 秒检测一次
         this_thread::sleep_for(chrono::seconds(3));
     }
 
