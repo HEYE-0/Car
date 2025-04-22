@@ -8,39 +8,49 @@ using namespace std;
 using namespace cv;
 
 int main() {
-    cout << "🎯 Starting ArUco periodic detection..." << endl;
+    cout << "🎯 Starting periodic ArUco detection (DICT_5X5_50, ID=5)..." << endl;
 
-    VideoCapture cap(0);  // 打开摄像头
+    // 打开默认摄像头（编号为0）
+    VideoCapture cap(0);
     if (!cap.isOpened()) {
-        cerr << "❌ Cannot open camera" << endl;
+        cerr << "❌ Failed to open camera." << endl;
         return -1;
     }
 
+    // 初始化5x5的aruco字典
     Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_50);
-    aruco::DetectorParameters params;
+    aruco::DetectorParameters parameters;
 
     while (true) {
         Mat frame;
         cap >> frame;
 
         if (frame.empty()) {
-            cerr << "⚠️ Empty frame, skipping...\n";
+            cerr << "⚠️ Empty frame, skipping." << endl;
             this_thread::sleep_for(chrono::seconds(3));
             continue;
         }
 
+        // 检测二维码
         vector<int> ids;
         vector<vector<Point2f>> corners;
-        aruco::detectMarkers(frame, dictionary, corners, ids, &params);
+        aruco::detectMarkers(frame, dictionary, corners, ids, parameters);
 
-        if (!ids.empty()) {
-            cout << "✅ Detected marker IDs: ";
-            for (int id : ids) cout << id << " ";
-            cout << endl;
-        } else {
-            cout << "❌ No marker detected." << endl;
+        bool found_target = false;
+        for (int id : ids) {
+            if (id == 5) {
+                found_target = true;
+                break;
+            }
         }
 
+        if (found_target) {
+            cout << "✅ Detected ArUco marker with ID 5!" << endl;
+        } else {
+            cout << "❌ Marker ID 5 not found." << endl;
+        }
+
+        // 每隔3秒检测一次
         this_thread::sleep_for(chrono::seconds(3));
     }
 
