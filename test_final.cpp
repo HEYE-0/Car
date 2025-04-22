@@ -62,7 +62,7 @@ void readArduino() {
 
 // === 跟随模式摄像头线程 ===
 void followAruco() {
-    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_1000);
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50);
     Ptr<aruco::DetectorParameters> params = aruco::DetectorParameters::create();
 
     char last_cmd = 'q';
