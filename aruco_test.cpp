@@ -1,6 +1,6 @@
+#include <iostream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
-#include <iostream>
 #include <thread>
 #include <chrono>
 
@@ -8,49 +8,42 @@ using namespace std;
 using namespace cv;
 
 int main() {
-    cout << "🎯 Starting periodic ArUco detection (DICT_5X5_50, ID=5)..." << endl;
+    cout << "🎯 Starting periodic ArUco marker detection...\n";
 
-    // 打开默认摄像头（编号为0）
-    VideoCapture cap(0);
+    // 打开摄像头
+    VideoCapture cap(0); // 改为你的摄像头编号
     if (!cap.isOpened()) {
-        cerr << "❌ Failed to open camera." << endl;
+        cerr << "❌ Failed to open camera\n";
         return -1;
     }
 
-    // 初始化5x5的aruco字典
+    // 使用 5x5 的 ArUco 字典，包含 ID 为 5 的图案
     Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_50);
-    aruco::DetectorParameters parameters;
+    Ptr<aruco::DetectorParameters> parameters = aruco::DetectorParameters::create();
 
     while (true) {
         Mat frame;
         cap >> frame;
-
         if (frame.empty()) {
-            cerr << "⚠️ Empty frame, skipping." << endl;
-            this_thread::sleep_for(chrono::seconds(3));
+            cerr << "⚠️  Empty frame captured.\n";
             continue;
         }
 
-        // 检测二维码
         vector<int> ids;
         vector<vector<Point2f>> corners;
         aruco::detectMarkers(frame, dictionary, corners, ids, parameters);
 
-        bool found_target = false;
-        for (int id : ids) {
-            if (id == 5) {
-                found_target = true;
-                break;
+        if (!ids.empty()) {
+            cout << "✅ Detected marker IDs: ";
+            for (int id : ids) {
+                cout << id << " ";
             }
-        }
-
-        if (found_target) {
-            cout << "✅ Detected ArUco marker with ID 5!" << endl;
+            cout << endl;
         } else {
-            cout << "❌ Marker ID 5 not found." << endl;
+            cout << "❌ No marker detected.\n";
         }
 
-        // 每隔3秒检测一次
+        // 每 3 秒检测一次
         this_thread::sleep_for(chrono::seconds(3));
     }
 
