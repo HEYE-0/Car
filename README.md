@@ -7,6 +7,7 @@ The smart car is designed to navigate complex environments in scenarios such as 
 Additionally, the car supports manual control mode, allowing human intervention in high-risk or precision-required situations, enhancing the system’s overall flexibility and reliability.
 
 The project is developed on an Ubuntu system, with core control logic written in C++, and the web control interface developed using Python, balancing real-time performance and scalability.
+
 2. Project Structure
 
 ```
