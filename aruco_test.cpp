@@ -18,6 +18,7 @@ int main() {
     cout << "🎯 Starting headless ArUco detection... Press Ctrl+C to quit.\n";
 
     while (true) {
+        cout << " get into loop" <<endl;
         Mat frame;
         cap >> frame;
         if (frame.empty()) continue;
