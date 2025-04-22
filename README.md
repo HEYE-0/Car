@@ -25,7 +25,7 @@ Car/
 ├── .vscode/                 # VS Code configuration
 ├── venv/                    # Python virtual environment
 ├── .gitignore               # Git ignore configuration
-├── Project Task Allocation.txt
+├── Project Task Allocation.docx
 └── README.md                # Project documentation
 
 ```
