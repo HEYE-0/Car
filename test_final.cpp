@@ -66,8 +66,8 @@ void followAruco() {
     Ptr<aruco::DetectorParameters> params = aruco::DetectorParameters::create();
 
     char last_cmd = 'q';
-    const int tolerance = 50;
-    const int delay_ms = 2000;
+    const int tolerance = 10;
+    const int delay_ms = 1000;
 
     unique_lock<mutex> lock(mode_mutex);
 
