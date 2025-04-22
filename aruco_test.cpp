@@ -12,7 +12,7 @@ int main() {
         return -1;
     }
 
-    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50);
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_1000);
     aruco::DetectorParameters params;
 
     cout << "🎯 Starting headless ArUco detection... Press Ctrl+C to quit.\n";
