@@ -62,18 +62,12 @@ void readArduino() {
 
 // === 跟随模式摄像头线程 ===
 void followAruco() {
-    VideoCapture cap(0);
-    if (!cap.isOpened()) {
-        cerr << "❌ Cannot open camera" << endl;
-        return;
-    }
-
     Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_50);
     Ptr<aruco::DetectorParameters> params = aruco::DetectorParameters::create();
 
     char last_cmd = 'q';
     const int tolerance = 50;
-    const int delay_ms = 1000;
+    const int delay_ms = 2000;
 
     unique_lock<mutex> lock(mode_mutex);
 
@@ -81,10 +75,12 @@ void followAruco() {
         mode_cv.wait(lock, [] { return mode == 'f' || !running; });
         if (!running) break;
 
-        Mat frame;
-        cap >> frame;
+        // 用libcamera-still拍摄一张照片
+        system("libcamera-still -o frame.jpg --width 640 --height 480 --nopreview -t 1000");
+
+        Mat frame = imread("frame.jpg");
         if (frame.empty()) {
-            cerr << "⚠️ Empty frame\n";
+            cerr << "⚠️ Failed to load captured image.\n";
             this_thread::sleep_for(chrono::milliseconds(delay_ms));
             continue;
         }
@@ -108,7 +104,7 @@ void followAruco() {
             else if (center.x > frame_center + tolerance) cmd = 'd';
             else cmd = 'w';
 
-            cout << "🎯 Tag ID=5 found at x=" << center.x << ", sending " << cmd << endl;
+            cout << "🎯 Tag ID=5 detected at x=" << center.x << ", sending command: " << cmd << endl;
         } else {
             cout << "❌ Tag ID=5 not found\n";
         }
@@ -120,8 +116,6 @@ void followAruco() {
 
         this_thread::sleep_for(chrono::milliseconds(delay_ms));
     }
-
-    cap.release();
 }
 
 // === 终端键盘输入设置 ===
