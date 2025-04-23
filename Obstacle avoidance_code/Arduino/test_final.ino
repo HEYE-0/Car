@@ -1,13 +1,13 @@
-// === 引脚定义 ===
-// 超声波传感器
-#define TRIG_FRONT A1
-#define ECHO_FRONT A0
-#define TRIG_LEFT  A3
-#define ECHO_LEFT  A2
-#define TRIG_RIGHT A5
-#define ECHO_RIGHT A4
+// === Pin Definitions ===
+// Ultrasonic sensors
+#define TRIG_FRONT A1  // Pin connected to the Trig of the front ultrasonic sensor
+#define ECHO_FRONT A0  // Pin connected to the Echo of the front ultrasonic sensor
+#define TRIG_LEFT  A3  // Pin connected to the Trig of the left ultrasonic sensor
+#define ECHO_LEFT  A2  // Pin connected to the Echo of the left ultrasonic sensor
+#define TRIG_RIGHT A5  // Pin connected to the Trig of the right ultrasonic sensor
+#define ECHO_RIGHT A4  // Pin connected to the Echo of the right ultrasonic sensor
 
-// 电机引脚
+// Motor pins
 #define M1A_IN1 2
 #define M1A_IN2 4
 #define M1A_EN 3
@@ -24,18 +24,18 @@
 #define M2B_IN2 12
 #define M2B_EN 11
 
-// === 控制变量 ===
+// === Control Variables ===
 int speedMotor = 80;
-char mode = 'm';  // 默认手动模式
+char mode = 'm';  // Default mode is manual
 
-// 避障状态机
+// Obstacle state machine
 enum ObstacleState { NORMAL, BACKING, TURNING };
 ObstacleState obsState = NORMAL;
 unsigned long stateStartTime = 0;
 unsigned long lastCheckTime = 0;
 const unsigned long checkInterval = 100;
 
-// === 电机控制函数 ===
+// === Motor Control Functions ===
 void motor(int in1, int in2, int en, int s1, int s2, int pwm = speedMotor) {
   digitalWrite(in1, s1);
   digitalWrite(in2, s2);
@@ -77,7 +77,7 @@ void turnRight() {
   motor(M2B_IN1, M2B_IN2, M2B_EN, HIGH, LOW);
 }
 
-// === 超声波测距函数（单位 cm）===
+// === Ultrasonic Distance Measurement Function (in cm) ===
 float getDistance(int trigPin, int echoPin) {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -85,12 +85,12 @@ float getDistance(int trigPin, int echoPin) {
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
 
-  long duration = pulseIn(echoPin, HIGH, 25000); // 超时 25ms
+  long duration = pulseIn(echoPin, HIGH, 25000); // Timeout at 25ms
   if (duration == 0) return -1;
   return duration * 0.034 / 2.0;
 }
 
-// === 避障状态控制逻辑 ===
+// === Obstacle Avoidance State Control Logic ===
 void avoidObstacle() {
   unsigned long now = millis();
   switch (obsState) {
@@ -109,7 +109,7 @@ void avoidObstacle() {
       break;
     case TURNING:
       if (now - stateStartTime < 400) {
-        turnRight();  // 或可根据左右距离决定方向
+        turnRight();  // Or you can decide the direction based on left/right distances
       } else {
         obsState = NORMAL;
       }
@@ -117,17 +117,17 @@ void avoidObstacle() {
   }
 }
 
-// === 初始化设置 ===
+// === Initialization Setup ===
 void setup() {
   Serial.begin(9600);
 
-  // 初始化电机
+  // Initialize motors
   pinMode(M1A_IN1, OUTPUT); pinMode(M1A_IN2, OUTPUT); pinMode(M1A_EN, OUTPUT);
   pinMode(M1B_IN1, OUTPUT); pinMode(M1B_IN2, OUTPUT); pinMode(M1B_EN, OUTPUT);
   pinMode(M2A_IN1, OUTPUT); pinMode(M2A_IN2, OUTPUT); pinMode(M2A_EN, OUTPUT);
   pinMode(M2B_IN1, OUTPUT); pinMode(M2B_IN2, OUTPUT); pinMode(M2B_EN, OUTPUT);
 
-  // 初始化传感器
+  // Initialize sensors
   pinMode(TRIG_FRONT, OUTPUT); pinMode(ECHO_FRONT, INPUT);
   pinMode(TRIG_LEFT, OUTPUT);  pinMode(ECHO_LEFT, INPUT);
   pinMode(TRIG_RIGHT, OUTPUT); pinMode(ECHO_RIGHT, INPUT);
@@ -136,9 +136,9 @@ void setup() {
   Serial.println("✅ Arduino Ready (Auto mode default)");
 }
 
-// === 主循环逻辑 ===
+// === Main Loop Logic ===
 void loop() {
-  // 串口模式切换与手动控制
+  // Switch between serial modes and manual control
   if (Serial.available()) {
     char cmd = Serial.read();
     switch (cmd) {
@@ -152,7 +152,7 @@ void loop() {
     }
   }
 
-  // 自动避障模式逻辑
+  // Auto obstacle avoidance mode logic
   if (mode == 'a') {
     unsigned long now = millis();
     if (now - lastCheckTime >= checkInterval) {
@@ -167,10 +167,10 @@ void loop() {
       Serial.print(" cm | Right: "); Serial.println(right);
 
       if (obsState != NORMAL) {
-        avoidObstacle();  // 状态机进行中
+        avoidObstacle();  // State machine in progress
       } else {
         if (front > 0 && front < 20) {
-          obsState = BACKING;  // 启动状态机
+          obsState = BACKING;  // Start state machine
           stateStartTime = now;
         } else if (left > 0 && left < 15) {
           turnRight();
