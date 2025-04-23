@@ -14,19 +14,20 @@ The project is developed on the Ubuntu operating system, with the core control l
 
 ```
 Car/
-├── Arduino/                 # Arduino control scripts
-├── Camera/                  # Camera image processing module
-├── Obstacle_avoidance_code/ # Ultrasonic obstacle avoidance logic
-├── shoe_follow_project/     # Target following functionality
-├── follow_change/           # Update history of the following module
-├── follow_test/             # Testing scripts for target following
-├── web/                     # Web-based control interface (Flask)
-├── Tutorial/                # Tutorials and documentation
-├── .vscode/                 # VS Code configuration
-├── venv/                    # Python virtual environment
-├── .gitignore               # Git ignore configuration
-├── Project Task Allocation.docx
-└── README.md                # Project documentation
+├── Arduino/                 # Scripts to control the Arduino board, handling sensor data and motor commands
+├── Camera/                  # Module responsible for processing camera images, including object recognition and tracking
+├── Obstacle_avoidance_code/ # Logic for ultrasonic sensor-based obstacle detection and avoidance
+├── shoe_follow_project/     # Core functionality for target-following, focusing on tracking and following a moving target
+├── follow_change/           # Record of updates and improvements made to the target-following module
+├── follow_test/             # Scripts used to test and validate the target-following functionality in various scenarios
+├── web/                     # Web-based control interface built with Flask, enabling remote monitoring and control of the car
+├── Tutorial/                # Collection of tutorials and user documentation to assist with understanding and using the system
+├── .vscode/                 # Configuration files for Visual Studio Code, optimized for the project’s environment
+├── venv/                    # Python virtual environment containing the necessary libraries for the project’s dependencies
+├── .gitignore               # Configuration file specifying which files and directories should be ignored by Git
+├── Project Task Allocation.docx # Document detailing task distribution and team responsibilities
+└── README.md                # Comprehensive documentation about the project, its objectives, and how to use it
+
 
 ```
 3. Installation & Usage
