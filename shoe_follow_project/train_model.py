@@ -5,7 +5,7 @@ import os
 IMG_SIZE = 160
 BATCH_SIZE = 32
 
-data_dir = "dataset"  # 你存放图片的目录
+data_dir = "dataset" # The directory where you store images
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     data_dir,
     image_size=(IMG_SIZE, IMG_SIZE),
