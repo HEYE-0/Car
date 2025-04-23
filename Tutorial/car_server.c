@@ -9,31 +9,31 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <signal.h>
-#include <pigpio.h> // 替换 wiringPi
+#include <pigpio.h> // Replace "wiringPi".
 
 #define BUFSIZE 512
 
-// 电机控制宏定义
+// Macro definitions for motor control
 #define MOTOR_GO_FORWARD   gpioWrite(1,1); gpioWrite(4,0); gpioWrite(5,1); gpioWrite(6,0)
 #define MOTOR_GO_BACK      gpioWrite(1,0); gpioWrite(4,1); gpioWrite(5,0); gpioWrite(6,1)
 #define MOTOR_GO_RIGHT     gpioWrite(1,1); gpioWrite(4,0); gpioWrite(5,0); gpioWrite(6,0)
 #define MOTOR_GO_LEFT      gpioWrite(1,0); gpioWrite(4,0); gpioWrite(5,1); gpioWrite(6,0)
 #define MOTOR_GO_STOP      gpioWrite(1,0); gpioWrite(4,0); gpioWrite(5,0); gpioWrite(6,0)
 
-// 客户端结构体
+// "Client structure"
 typedef struct CLIENT {
     int fd;
     struct sockaddr_in addr;
 } CLIENT;
 
-// 处理 SIGINT 信号，确保程序安全退出
+// Handle the SIGINT signal to ensure the program exits safely.
 void handle_signal(int sig) {
     gpioTerminate();
     printf("\nServer shutting down...\n");
     exit(EXIT_SUCCESS);
 }
 
-// 执行电机指令
+// Execute motor instructions.
 void executeCommand(unsigned char command) {
     switch(command) {
         case 0x01: MOTOR_GO_FORWARD; printf("forward\n"); break;
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
     fd_set rset, allset;
     CLIENT client[FD_SETSIZE];
 
-    // 处理 SIGINT 信号，确保安全退出
+    // Handle the SIGINT signal to ensure a safe exit.
     signal(SIGINT, handle_signal);
 
     if(argc != 2) {
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // 解析端口号
+    // Parse the port number
     char *endptr;
     portnumber = strtol(argv[1], &endptr, 10);
     if (*endptr != '\0' || portnumber <= 0 || portnumber > 65535) {
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // 创建监听套接字
+    // Create a listening socket.
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // 初始化 GPIO 引脚
+    // Initialize GPIO pins.
     for (i = 1; i <= 6; i++) gpioSetMode(i, PI_OUTPUT);
     gpioSetMode(3, PI_OUTPUT);
     MOTOR_GO_STOP;
@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
 
     while (1) {
         rset = allset;
-        tv.tv_sec = 1;  // 超时设置，减少 CPU 负载
+        tv.tv_sec = 1;  // "Timeout setting to reduce CPU load"
         tv.tv_usec = 0;
 
         ret = select(maxfd + 1, &rset, NULL, NULL, &tv);
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        // 处理新连接
+        // Process new connections.
         if (FD_ISSET(listenfd, &rset)) {
             len = sizeof(client_addr);
             connectfd = accept(listenfd, (struct sockaddr *)(&client_addr), &len);
@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
             if (i > maxi) maxi = i;
         }
 
-        // 处理客户端数据
+        // Process the data of the client.
         for (i = 0; i <= maxi; i++) {
             if ((sockfd = client[i].fd) < 0) continue;
             if (FD_ISSET(sockfd, &rset)) {

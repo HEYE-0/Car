@@ -1,74 +1,116 @@
-Real-Time Disaster-Response Smart Car
+🚗 Real-Time Disaster-Response Smart Car
+
 1. Project Overview
-This project is a hands-on assignment for the ENG5220: Real Time Embedded Programming course, aimed at developing a small mobile robot with intelligent obstacle avoidance and target-following capabilities. The primary goal is to create a robot that can operate autonomously in complex environments, such as those encountered during earthquakes or other natural disasters, where navigating unpredictable and hazardous terrain is crucial.
 
-The smart car is designed to be versatile, equipped with ultrasonic sensors and a camera to detect and avoid obstacles in real time, ensuring it can move smoothly through challenging spaces. In addition, the robot has the ability to automatically identify and follow individuals, making it particularly useful for emergency situations, like transporting materials in disaster zones or providing assistance in search-and-rescue operations.
+This project is a practical assignment for the ENG5220: Real Time Embedded Programming course. It aims to develop a small mobile robot equipped with intelligent obstacle avoidance and target-following capabilities.
 
-To further enhance its functionality, the car also supports manual control mode. This feature allows a human operator to intervene in high-risk situations or when precise movements are required, providing additional flexibility and reliability to the system. 
+The smart car is designed to navigate complex environments such as earthquake zones and other natural disaster sites. With ultrasonic sensors and a camera, it can detect and avoid obstacles in real time. Furthermore, it attempts to recognize and follow individuals, making it useful for emergency tasks like material transport.
 
-The entire project is developed on an Ubuntu system, with the core control logic written in C++ to ensure efficient, real-time performance. The web control interface is built using Python, striking a balance between scalability and the ability to manage the system remotely, providing a robust solution for real-world applications.
+In addition to its autonomous functions, the car supports manual control through keyboard or web interface, providing flexibility for high-risk or precision-required environments.
+
+The project is developed on Ubuntu, with core logic in C++ and web interface in Python, balancing real-time performance and scalability.
+
 2. Project Structure
+
+```
 Car/
-├── Camera/                       # Camera image processing module  
-├── Obstacle_Avoidance_Code/       # Ultrasonic obstacle avoidance control code  
-├── Target_Following_Project/      # Implementation of target-following functionality  
-├── Follow_Module_Updates/         # Logs of updates made to the follow module  
-├── Follow_Testing/                # Scripts for testing the follow feature  
-├── Web_Interface/                 # Web-based remote control interface (Flask)  
-├── Documentation/                 # Tutorials and user documentation  
-├── .vscode/                       # VS Code configuration files  
-├── venv/                          # Python virtual environment  
-├── .gitignore                     # Git ignore rules  
-└── README.md                      # Project description and overview file  
+├── Arduino/                 # Arduino control scripts
+├── Camera/                  # Camera image processing module
+├── Obstacle_avoidance_code/ # Ultrasonic obstacle avoidance logic
+├── shoe_follow_project/     # Target following functionality
+├── follow_change/           # Update history of the following module
+├── follow_test/             # Testing scripts for target following
+├── web/                     # Web-based control interface (Flask)
+├── Tutorial/                # Tutorials and documentation
+├── .vscode/                 # VS Code configuration
+├── venv/                    # Python virtual environment
+├── .gitignore               # Git ignore configuration
+├── Project Task Allocation.docx
+└── README.md                # Project documentation
+
+```
 3. Installation & Usage
-The project is deployed on a Raspberry Pi system and supports three control modes: automatic obstacle avoidance, target following, and manual remote control. The core motion control is executed via an Arduino.
 
-Basic usage steps:
+This project runs on a Raspberry Pi, supports three modes: automatic, follow (attempted), and manual control. The Arduino executes the movement control.
 
-3.1 Power on and start the Raspberry Pi system  
-Upon startup, the Raspberry Pi automatically enters the main control program (you can manually switch modes via command line).
+3.1 Startup
 
-3.2 Default to manual control mode  
-Use serial commands to control the car's movements:
-- 'w': move forward
-- 's': move backward
-- 'a': turn left
-- 'd': turn right
-- 'q': stop
+Power on the Raspberry Pi. It will auto-launch the main control program. You can switch modes via keyboard input.
 
-3.3 Switch to automatic mode
-- 'p': enter automatic obstacle avoidance/following mode
-- 'm': exit automatic mode and return to manual control
+3.2 Manual Mode (default)
 
-3.4 Web control
-After launching the web service on the Raspberry Pi, you can visit:
-http://<Raspberry_Pi_IP>:5000
-to access the graphical control interface (startup script is located in the /web directory).
+Use the keyboard to send commands via serial:
+	•	w: Move forward
+	•	s: Move backward
+	•	a: Turn left
+	•	d: Turn right
+	•	q: Stop
 
-3.5 Follow mode  
-Run follow_test/main, and the car will detect and attempt to follow an object in front, suitable for tracking a person's feet or other designated targets.
+3.3 Automatic Mode
+	•	p: Enter automatic obstacle avoidance
+	•	m: Exit automatic mode and return to manual
 
-Notes:
-- Ensure the ultrasonic sensors and camera are functioning properly before using automatic mode.
-- Arduino control logic must be uploaded via USB in advance.
-- Default serial baud rate is 9600.
-- Recommended usage environment: flat ground with good lighting to ensure accurate visual recognition.
+3.4 Web Control
+
+Run the Flask server in the /web folder and visit:http://172.20.10.12:8888
+for a graphical interface.
+
+3.5 Follow Mode (Not Fully Functional)
+
+We attempted to implement target following using ArUco marker detection (ID = 5). However, due to limited camera resolution (Raspberry Pi V2 camera) and motor steering accuracy, we couldn’t achieve stable following. The system logic and test scripts remain in /follow_test/ for reference and future improvement.
+
+⚠️ Make sure the ultrasonic modules and camera are connected and functional before using auto modes.
+The Arduino must be programmed in advance over USB.
+Default baud rate is 9600.
+Ideal conditions: flat surface and good lighting for reliable vision.
+
+
 4. Core Features
-- Real-time ultrasonic obstacle avoidance  
-- Visual recognition and target following via camera  
-- Seamless switching between manual and automatic modes  
-- Flask-based web control interface  
-- Modular design for easy expansion and integration
-5. Project Demonstration
-<!-- Replace the link below with demo video/image if available -->
-6. Tech Stack
-- Development Platform: Ubuntu  
-- Programming Languages: C++ (core control), Python (web & script logic)  
-- Hardware Platform: Raspberry Pi, Arduino UNO, L298N, ultrasonic modules, camera  
-- Vision Processing: OpenCV  
-- Control System: Flask + serial communication
-7. Open Source License
-This project is open-sourced under the MIT License. Contributions and further development are welcome.
-8. Author Information
-Author: HEYE-0  
+	•	Real-time ultrasonic obstacle avoidance
+	•	Camera-based ArUco marker detection
+	•	Seamless manual/auto mode switching
+	•	Web-based control via Flask
+	•	Modular code structure for easy extension
+
+
+5. Tech Stack
+	•	OS: Ubuntu on Raspberry Pi
+	•	Languages: C++ (core), Python (web and utilities)
+	•	Framework: Flask for web control
+	•	Vision: OpenCV & ArUco markers
+	•	Hardware: Raspberry Pi, Arduino UNO, L298N motor driver, ultrasonic sensors, Pi Camera V2
+	•	Communication: Serial via /dev/ttyACM0
+
+6.Hardware Architecture Overview
+
+This project implements an intelligent smart car with autonomous obstacle avoidance and attempted target tracking capabilities. The hardware system is designed with the following components:
+
+	•	Drive System:
+The car is powered by four DC motors, each connected to a wheel to provide independent movement. This setup enables precise control for directional movement such as forward, backward, turning, and stopping.
+
+	•	Motor Control:
+Two L298N motor driver modules are used to control the four motors. Each L298N controls two motors, and together they provide full bidirectional control for the car’s movement.
+
+	•	Microcontroller (Arduino):
+An Arduino UNO serves as the intermediary controller. It receives high-level commands from the Raspberry Pi via serial communication and translates them into low-level motor control signals for the L298N modules.
+
+	•	Main Controller (Raspberry Pi):
+The Raspberry Pi acts as the central processing unit of the system. It is responsible for:
+
+	•	Sending movement commands to the Arduino
+	•	Processing visual data from the camera (ArUco marker recognition)
+	•	Hosting a remote web control interface
+	•	Managing control mode switching (manual, automatic, follow)
+
+This layered hardware design ensures a clear separation of responsibilities, where the Arduino handles low-level motor control, and the Raspberry Pi focuses on high-level decision-making and remote connectivity.
+
+7. License
+
+This project is licensed under the MIT License.
+Feel free to contribute or fork for your own enhancements.
+
+
+8. Author
+
+Author: HEYE-0
 GitHub: https://github.com/HEYE-0/Car

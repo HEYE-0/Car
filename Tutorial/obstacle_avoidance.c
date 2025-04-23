@@ -1,5 +1,4 @@
-
-#include <gpiod.h>
+#include <gpiod.h> 
 #include <fcntl.h>
 #include <unistd.h>
 #include <termios.h>
@@ -11,11 +10,11 @@
 using namespace std;
 using namespace std::chrono_literals;
 
-const char* chipname = "gpiochip4"; // 树莓派5 一般是 gpiochip4
-const int IR_LEFT_PIN = 8;  // 请根据实际GPIO编号修改
+const char* chipname = "gpiochip4"; // For Raspberry Pi 5, usually gpiochip4
+const int IR_LEFT_PIN = 8;  // Modify according to the actual GPIO pin number
 const int IR_RIGHT_PIN = 9;
 
-const char* SERIAL_PORT = "/dev/ttyUSB0"; // Arduino串口
+const char* SERIAL_PORT = "/dev/ttyUSB0"; // Arduino serial port
 int serial_fd;
 
 gpiod_line* setup_input(gpiod_chip* chip, int line_num) {
@@ -27,7 +26,7 @@ gpiod_line* setup_input(gpiod_chip* chip, int line_num) {
 void setupSerial() {
     serial_fd = open(SERIAL_PORT, O_RDWR | O_NOCTTY | O_NDELAY);
     if (serial_fd == -1) {
-        cerr << "无法打开串口设备" << endl;
+        cerr << "Unable to open the serial port device" << endl;
         exit(1);
     }
 
@@ -51,7 +50,7 @@ void sendCommand(const string& cmd) {
 int main() {
     gpiod_chip* chip = gpiod_chip_open_by_name(chipname);
     if (!chip) {
-        cerr << "无法打开 GPIO 芯片接口！" << endl;
+        cerr << "Unable to open GPIO chip interface!" << endl;
         return 1;
     }
 
@@ -65,16 +64,16 @@ int main() {
 
         if (left == 0 && right == 0) {
             sendCommand("STOP\n");
-            cout << "两侧有障碍，停止" << endl;
+            cout << "Obstacles on both sides, stop" << endl;
         } else if (left == 0) {
             sendCommand("RIGHT\n");
-            cout << "左障碍，右转" << endl;
+            cout << "Left obstacle, turn right" << endl;
         } else if (right == 0) {
             sendCommand("LEFT\n");
-            cout << "右障碍，左转" << endl;
+            cout << "Right obstacle, turn left" << endl;
         } else {
             sendCommand("FORWARD\n");
-            cout << "前进" << endl;
+            cout << "Move forward" << endl;
         }
 
         this_thread::sleep_for(100ms);

@@ -1,91 +1,91 @@
-#include <stdio.h>
+#include <stdio.h>  
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-#include <wiringPi.h>       // 引入wiringPi库，用于GPIO控制
-#include <softPwm.h>        // 引入软PWM库，用于模拟PWM信号
+#include <wiringPi.h>       // Include the wiringPi library for GPIO control
+#include <softPwm.h>        // Include the softPWM library for simulating PWM signals
 
-// 定义GPIO引脚
-#define Trig  28  // 超声波传感器Trig脚连接的GPIO引脚
-#define Echo  29  // 超声波传感器Echo脚连接的GPIO引脚
-#define LEFT  27  // 左侧障碍物传感器连接的GPIO引脚
-#define RIGHT 26  // 右侧障碍物传感器连接的GPIO引脚
-#define BUFSIZE 512 // 缓冲区大小
+// Define GPIO pins
+#define Trig  28  // GPIO pin connected to the Trig pin of the ultrasonic sensor
+#define Echo  29  // GPIO pin connected to the Echo pin of the ultrasonic sensor
+#define LEFT  27  // GPIO pin connected to the left obstacle sensor
+#define RIGHT 26  // GPIO pin connected to the right obstacle sensor
+#define BUFSIZE 512 // Buffer size
 
-// 定义电机控制逻辑
+// Define motor control logic
 #define MOTOR_GO_FORWARD   digitalWrite(1, HIGH); digitalWrite(4, LOW); digitalWrite(5, HIGH); digitalWrite(6, LOW)
 #define MOTOR_GO_BACK      digitalWrite(4, HIGH); digitalWrite(1, LOW); digitalWrite(6, HIGH); digitalWrite(5, LOW)
 #define MOTOR_GO_RIGHT     digitalWrite(1, HIGH); digitalWrite(4, LOW); digitalWrite(6, HIGH); digitalWrite(5, LOW)
 #define MOTOR_GO_LEFT      digitalWrite(4, HIGH); digitalWrite(1, LOW); digitalWrite(5, HIGH); digitalWrite(6, LOW)
 #define MOTOR_GO_STOP      digitalWrite(1, LOW); digitalWrite(4, LOW); digitalWrite(5, LOW); digitalWrite(6, LOW)
 
-// GPIO 初始化
+// GPIO initialization
 void setup() {
-    if (wiringPiSetup() == -1) {  // 初始化wiringPi库，如果失败则输出错误信息并退出
+    if (wiringPiSetup() == -1) {  // Initialize the wiringPi library, exit if failed
         fprintf(stderr, "Setup failed!\n");
         exit(1);
     }
     
-    // 设置GPIO引脚模式
-    pinMode(1, OUTPUT);  // 设置引脚1为输出，控制电机
-    pinMode(4, OUTPUT);  // 设置引脚4为输出，控制电机
-    pinMode(5, OUTPUT);  // 设置引脚5为输出，控制电机
-    pinMode(6, OUTPUT);  // 设置引脚6为输出，控制电机
-    pinMode(LEFT, INPUT);   // 设置左侧障碍物传感器引脚为输入
-    pinMode(RIGHT, INPUT);  // 设置右侧障碍物传感器引脚为输入
+    // Set GPIO pin modes
+    pinMode(1, OUTPUT);  // Set pin 1 as output to control the motor
+    pinMode(4, OUTPUT);  // Set pin 4 as output to control the motor
+    pinMode(5, OUTPUT);  // Set pin 5 as output to control the motor
+    pinMode(6, OUTPUT);  // Set pin 6 as output to control the motor
+    pinMode(LEFT, INPUT);   // Set the left obstacle sensor pin as input
+    pinMode(RIGHT, INPUT);  // Set the right obstacle sensor pin as input
 
-    // 初始化软PWM信号，参数分别为引脚号、初始值、最大值
-    softPwmCreate(1, 0, 500);  // 初始化电机控制引脚1的软PWM
-    softPwmCreate(4, 0, 500);  // 初始化电机控制引脚4的软PWM
-    softPwmCreate(5, 0, 500);  // 初始化电机控制引脚5的软PWM
-    softPwmCreate(6, 0, 500);  // 初始化电机控制引脚6的软PWM
+    // Initialize soft PWM signals, with parameters being pin number, initial value, and maximum value
+    softPwmCreate(1, 0, 500);  // Initialize soft PWM on pin 1 for motor control
+    softPwmCreate(4, 0, 500);  // Initialize soft PWM on pin 4 for motor control
+    softPwmCreate(5, 0, 500);  // Initialize soft PWM on pin 5 for motor control
+    softPwmCreate(6, 0, 500);  // Initialize soft PWM on pin 6 for motor control
 }
 
-// 前进
+// Move forward
 void run() {
     printf("[INFO] Moving Forward\n");
-    // 设置前进的电机控制信号
+    // Set motor control signals to move forward
     softPwmWrite(1, 250);
     softPwmWrite(4, 0);
     softPwmWrite(5, 250);
     softPwmWrite(6, 0);
 }
 
-// 停止
+// Stop (brake)
 void brake() {
     printf("[INFO] Stopping\n");
-    // 设置停止的电机控制信号
+    // Set motor control signals to stop
     softPwmWrite(1, 0);
     softPwmWrite(4, 0);
     softPwmWrite(5, 0);
     softPwmWrite(6, 0);
 }
 
-// 左转
+// Turn left
 void left() {
     printf("[INFO] Turning Left\n");
-    // 设置左转的电机控制信号
+    // Set motor control signals to turn left
     softPwmWrite(4, 250);
     softPwmWrite(1, 0);
     softPwmWrite(6, 0);
     softPwmWrite(5, 250);
 }
 
-// 右转
+// Turn right
 void right() {
     printf("[INFO] Turning Right\n");
-    // 设置右转的电机控制信号
+    // Set motor control signals to turn right
     softPwmWrite(4, 0);
     softPwmWrite(1, 250);
     softPwmWrite(6, 250);
     softPwmWrite(5, 0);
 }
 
-// 后退
+// Move backward
 void back() {
     printf("[INFO] Moving Backward\n");
-    // 设置后退的电机控制信号
+    // Set motor control signals to move backward
     softPwmWrite(1, 250);
     softPwmWrite(4, 0);
     softPwmWrite(5, 250);
@@ -93,33 +93,31 @@ void back() {
 }
 
 int main() {
-    setup();  // 初始化GPIO
+    setup();  // Initialize GPIO
 
     int SR, SL;
 
     while (1) {
-        // 读取右侧和左侧障碍物传感器的状态
-        SR = digitalRead(RIGHT);  // 读取右侧传感器的值
-        SL = digitalRead(LEFT);   // 读取左侧传感器的值
+        // Read the status of the right and left obstacle sensors
+        SR = digitalRead(RIGHT);  // Read the value of the right sensor
+        SL = digitalRead(LEFT);   // Read the value of the left sensor
 
-        // 判断两侧传感器的状态
-        if (SL == LOW && SR == LOW) {   // 两边均无障碍物，前进
+        // Determine actions based on sensor status
+        if (SL == LOW && SR == LOW) {   // No obstacles on both sides, move forward
             run();
         } 
-        else if (SL == HIGH && SR == LOW) {  // 左侧检测到障碍物，右转
+        else if (SL == HIGH && SR == LOW) {  // Left side detects an obstacle, turn right
             right();
         } 
-        else if (SR == HIGH && SL == LOW) {  // 右侧检测到障碍物，左转
+        else if (SR == HIGH && SL == LOW) {  // Right side detects an obstacle, turn left
             left();
         } 
-        else {  // 两侧均检测到障碍物，停止
+        else {  // Obstacles detected on both sides, stop the car
             brake();
         }
 
-        delay(50);  // 延迟50ms，避免CPU过载
+        delay(50);  // Delay for 50ms to avoid CPU overload
     }
 
     return 0;
 }
-
-
