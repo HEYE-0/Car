@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// 打开串口
+// Open the serial port
 int openSerialPort(const char* portName) {
     int serial = open(portName, O_RDWR | O_NOCTTY | O_SYNC);
     if (serial < 0) {
@@ -44,7 +44,7 @@ int openSerialPort(const char* portName) {
 }
 
 int main() {
-    const char* port = "/dev/ttyACM0";  // 根据实际情况修改为 ttyUSB0 / ttyACM1 等
+    const char* port = "/dev/ttyACM0";  // Modify the following text according to the actual situation to ttyUSB0 / ttyACM1, etc.
     int serial = openSerialPort(port);
     if (serial < 0) return 1;
 
