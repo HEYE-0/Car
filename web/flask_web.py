@@ -15,17 +15,17 @@ def index():
 
 @app.route('/control', methods=['POST'])
 def control():
-    cmd = request.form['cmd']  # 比如 w、a、s、d
+    cmd = request.form['cmd']  # like w、a、s、d
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(RPI_HOST, username=RPI_USER, password=RPI_PASS)
         ssh.exec_command(f'echo {cmd} > {PTS_PATH}')
         ssh.close()
-        print(f"✅ 已发送：{cmd}")
+        print(f"✅ sent：{cmd}")
         return 'OK'
     except Exception as e:
-        print(f"❌ 错误：{e}")
+        print(f"❌ error：{e}")
         return 'ERROR'
 
 if __name__ == '__main__':
