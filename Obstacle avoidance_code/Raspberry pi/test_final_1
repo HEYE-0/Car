@@ -13,7 +13,7 @@ using namespace std;
 int serial_port;
 atomic<bool> running(true);
 
-// 初始化串口
+// Initialize serial port
 bool setupSerial(const string& port_name = "/dev/ttyUSB0", int baud_rate = B9600) {
     serial_port = open(port_name.c_str(), O_RDWR);
     if (serial_port < 0) {
@@ -35,12 +35,12 @@ bool setupSerial(const string& port_name = "/dev/ttyUSB0", int baud_rate = B9600
     return true;
 }
 
-// 发送命令
+// Send command to Arduino
 void sendCommand(char cmd) {
     write(serial_port, &cmd, 1);
 }
 
-// 读取 Arduino 的距离信息
+// Read distance information from Arduino
 void readArduino() {
     char buf[256];
     while (running) {
@@ -53,38 +53,38 @@ void readArduino() {
     }
 }
 
-// 设置终端为非阻塞、非回显模式
+// Set terminal to non-blocking, no-echo mode
 void enableKeyboardInput(termios& oldt) {
     termios newt;
     tcgetattr(STDIN_FILENO, &oldt);
     newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);  // 关闭标准输入模式和回显
+    newt.c_lflag &= ~(ICANON | ECHO);  // Disable canonical input and echo
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 }
 
-// 恢复终端模式
+// Restore terminal mode
 void restoreKeyboardInput(const termios& oldt) {
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 }
 
-// 处理 Ctrl+C 信号
+// Handle Ctrl+C signal
 void handleSignal(int signal) {
     running = false;
     close(serial_port);
-    cout << "\n🚪 程序已退出。\n";
+    cout << "\n🚪 Program has exited.\n";
     exit(0);
 }
 
 int main() {
-    signal(SIGINT, handleSignal); // 捕获 Ctrl+C
+    signal(SIGINT, handleSignal); // Capture Ctrl+C
 
     if (!setupSerial()) return 1;
-    this_thread::sleep_for(chrono::seconds(2)); // 等待 Arduino 启动
+    this_thread::sleep_for(chrono::seconds(2)); // Wait for Arduino to initialize
 
-    sendCommand('p'); // 初始自动模式
-    cout << "🚗 自动避障模式已启动 (按 m 切换手动)\n";
+    sendCommand('p'); // Initial auto mode
+    cout << "🚗 Auto obstacle avoidance mode started (press m to switch to manual)\n";
 
-    // 开线程读取 Arduino 信息
+    // Start a thread to read Arduino data
     thread reader(readArduino);
 
     termios oldt;
@@ -93,16 +93,16 @@ int main() {
     while (running) {
         if (read(STDIN_FILENO, &char key, 1) == 1) {
             switch (key) {
-                case 'w': sendCommand('w'); cout << "↑ 前进\n"; break;
-                case 's': sendCommand('s'); cout << "↓ 后退\n"; break;
-                case 'a': sendCommand('a'); cout << "← 左转\n"; break;
-                case 'd': sendCommand('d'); cout << "→ 右转\n"; break;
-                case 'q': sendCommand('q'); cout << "⛔ 停止\n"; break;
-                case 'p': sendCommand('p'); cout << "🚗 自动模式启动\n"; break;
-                case 'm': sendCommand('o'); cout << "🎮 手动模式启动\n"; break;
+                case 'w': sendCommand('w'); cout << "↑ Moving forward\n"; break;
+                case 's': sendCommand('s'); cout << "↓ Moving backward\n"; break;
+                case 'a': sendCommand('a'); cout << "← Turning left\n"; break;
+                case 'd': sendCommand('d'); cout << "→ Turning right\n"; break;
+                case 'q': sendCommand('q'); cout << "⛔ Stopping\n"; break;
+                case 'p': sendCommand('p'); cout << "🚗 Auto mode started\n"; break;
+                case 'm': sendCommand('o'); cout << "🎮 Manual mode started\n"; break;
                 case 27:  // ESC
                     running = false;
-                    cout << "🛑 ESC 退出程序\n";
+                    cout << "🛑 ESC to exit program\n";
                     break;
             }
         }
