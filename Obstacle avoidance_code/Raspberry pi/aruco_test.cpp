@@ -11,17 +11,17 @@ int main() {
     Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_1000);
 
     while (true) {
-        // 拍一张图像
+        // Capture an image
         system("libcamera-still -n -o temp.jpg --width 640 --height 480");
 
-        // 加载图像
+        // Load the image
         Mat frame = imread("temp.jpg");
         if (frame.empty()) {
             cout << "⚠️ Failed to load captured image\n";
             continue;
         }
 
-        // 检测 ArUco
+        // Detect ArUco markers
         vector<int> ids;
         vector<vector<Point2f>> corners;
         aruco::detectMarkers(frame, dictionary, corners, ids);
@@ -34,7 +34,7 @@ int main() {
             cout << "❌ No ArUco markers found\n";
         }
 
-        this_thread::sleep_for(chrono::seconds(3)); // 每 3 秒检测一次
+        this_thread::sleep_for(chrono::seconds(3)); // Check every 3 seconds
     }
 
     return 0;
