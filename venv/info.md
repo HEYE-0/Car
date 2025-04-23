@@ -1,0 +1,1 @@
+This virtual environment was created in Ubuntu because, starting from around version 22, Ubuntu restricts users from freely downloading content in order to maintain system integrity. Therefore, it's necessary to create a virtual environment, activate it, and then install the required packages within it.
