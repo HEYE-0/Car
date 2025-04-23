@@ -3,7 +3,7 @@ from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
-# 树莓派 SSH 登录信息
+# Raspberry Pi SSH Login Information
 RPI_HOST = '172.20.10.12'
 RPI_USER = 'wh'
 RPI_PASS = '123456'
