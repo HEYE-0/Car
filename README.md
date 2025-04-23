@@ -76,12 +76,13 @@ Ideal conditions: flat surface and good lighting for reliable vision.
 
 
 5. Tech Stack
-	•	OS: Ubuntu on Raspberry Pi
-	•	Languages: C++ (core), Python (web and utilities)
-	•	Framework: Flask for web control
-	•	Vision: OpenCV & ArUco markers
-	•	Hardware: Raspberry Pi, Arduino UNO, L298N motor driver, ultrasonic sensors, Pi Camera V2
-	•	Communication: Serial via /dev/ttyACM0
+    • OS: Ubuntu running on Raspberry Pi, providing a stable and versatile platform for the development and deployment of the robot.
+    • Languages: C++ for core functionality, ensuring high performance and real-time processing; Python for web interface and utility scripts, providing ease of development and flexibility.
+    • Framework: Flask used for creating a lightweight and user-friendly web control interface, enabling remote monitoring and interaction with the robot.
+    • Vision: OpenCV for computer vision tasks, paired with ArUco markers for precise marker detection and tracking in the robot’s environment.
+    • Hardware: Raspberry Pi for the main processing unit, Arduino UNO for sensor control, L298N motor driver for efficient motor control, ultrasonic sensors for obstacle detection, and Pi Camera V2 for visual input.
+    • Communication: Serial communication through /dev/ttyACM0 for seamless interaction between the Raspberry Pi and the Arduino UNO, ensuring data exchange and control signals.
+
 
 6.Hardware Architecture Overview
 
