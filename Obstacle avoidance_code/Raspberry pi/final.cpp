@@ -139,7 +139,7 @@ void handleSignal(int signal) {
     exit(0);
 }
 
-// === 主函数 ===
+// === Main function ===
 int main() {
     signal(SIGINT, handleSignal);
     if (!setupSerial()) return 1;
