@@ -15,7 +15,7 @@
 using namespace std;
 using namespace cv;
 
-// === 全局变量 ===
+// === Global variables ===
 int serial_port;
 atomic<bool> running(true);
 atomic<char> mode('p');
