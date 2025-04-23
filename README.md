@@ -66,12 +66,13 @@ Default baud rate is 9600.
 Ideal conditions: flat surface and good lighting for reliable vision.
 
 
-4. Core Features
-	•	Real-time ultrasonic obstacle avoidance
-	•	Camera-based ArUco marker detection
-	•	Seamless manual/auto mode switching
-	•	Web-based control via Flask
-	•	Modular code structure for easy extension
+4. Core Features 
+    • Real-time ultrasonic obstacle avoidance: Enables the robot to detect and avoid obstacles in real-time using ultrasonic sensors, ensuring smooth navigation.
+    • Camera-based ArUco marker detection: Uses a camera to detect ArUco markers, allowing the robot to recognize and interact with objects or targets in its environment.
+    • Seamless manual/auto mode switching: Provides the flexibility to switch between manual control and autonomous operation modes, ensuring adaptability to different situations.
+    • Web-based control via Flask: Offers a user-friendly web interface for remote control and monitoring, built using the Flask framework.
+    • Modular code structure for easy extension: Designed with a modular architecture, allowing for easy addition of new features or adjustments to existing functionality.
+
 
 
 5. Tech Stack
