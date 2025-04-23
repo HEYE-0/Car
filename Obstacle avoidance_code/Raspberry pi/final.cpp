@@ -22,7 +22,7 @@ atomic<char> mode('p');
 mutex mode_mutex;
 condition_variable mode_cv;
 
-// === 串口初始化 ===
+// === Serial port initialization ===
 bool setupSerial(const string& port_name = "/dev/ttyACM0", int baud_rate = B9600) {
     serial_port = open(port_name.c_str(), O_RDWR);
     if (serial_port < 0) {
