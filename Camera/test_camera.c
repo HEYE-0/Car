@@ -2,7 +2,7 @@
 #include <iostream>
 
 int main() {
-    cv::VideoCapture cap(0); // 使用第一个摄像头（0）
+    cv::VideoCapture cap(0); // Use the first camera (0).
 
     if (!cap.isOpened()) {
         std::cerr << "❌ Failed to open the camera!" << std::endl;
@@ -22,7 +22,7 @@ int main() {
         cv::imshow("📷 Live Camera Preview", frame);
 
         char key = (char)cv::waitKey(1);
-        if (key == 'q' || key == 27) break; // 按 q 或 Esc 退出
+        if (key == 'q' || key == 27) break; // Press "q" or "Esc" to exit.
     }
 
     cap.release();
