@@ -24,7 +24,7 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
     seed=123
 )
 
-# 数据预处理
+# Data Preprocessing
 AUTOTUNE = tf.data.AUTOTUNE
 train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.prefetch(buffer_size=AUTOTUNE)
