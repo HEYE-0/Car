@@ -29,7 +29,7 @@ AUTOTUNE = tf.data.AUTOTUNE
 train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.prefetch(buffer_size=AUTOTUNE)
 
-# 使用预训练模型 MobileNetV2
+# Using the pre-trained MobileNetV2 model
 base_model = tf.keras.applications.MobileNetV2(input_shape=(IMG_SIZE, IMG_SIZE, 3),
                                                include_top=False,
                                                weights='imagenet')
