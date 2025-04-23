@@ -7,7 +7,7 @@ app = Flask(__name__)
 RPI_HOST = '172.20.10.12'
 RPI_USER = 'wh'
 RPI_PASS = '123456'
-PTS_PATH = '/dev/pts/0'  # follow 程序所在终端
+PTS_PATH = '/dev/pts/0' # the terminal where the program is running
 
 @app.route('/')
 def index():
