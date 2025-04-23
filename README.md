@@ -2,13 +2,13 @@
 
 1. Project Overview
 
-This project is a practical assignment for the ENG5220: Real Time Embedded Programming course. It aims to develop a small mobile robot equipped with intelligent obstacle avoidance and target-following capabilities.
+This project is a hands-on assignment for the ENG5220: Real-Time Embedded Programming course, with the goal of developing a small mobile robot equipped with advanced intelligent capabilities, including obstacle avoidance and target-following. 
 
-The smart car is designed to navigate complex environments such as earthquake zones and other natural disaster sites. With ultrasonic sensors and a camera, it can detect and avoid obstacles in real time. Furthermore, it attempts to recognize and follow individuals, making it useful for emergency tasks like material transport.
+The smart car is specifically designed to operate in complex and dynamic environments, such as disaster zones following earthquakes or other natural disasters. Using a combination of ultrasonic sensors and a camera, it is capable of detecting and avoiding obstacles in real time, ensuring safe navigation. Additionally, the robot features target-following functionality, allowing it to recognize and track individuals. This makes it particularly useful for emergency tasks, such as transporting materials or assisting in search and rescue operations.
 
-In addition to its autonomous functions, the car supports manual control through keyboard or web interface, providing flexibility for high-risk or precision-required environments.
+Beyond its autonomous features, the car also includes manual control options through either a keyboard or a web interface. This dual-control capability adds significant flexibility, enabling precise human intervention in high-risk situations or environments where careful maneuvering is required.
 
-The project is developed on Ubuntu, with core logic in C++ and web interface in Python, balancing real-time performance and scalability.
+The project is developed on the Ubuntu operating system, with the core control logic implemented in C++ for efficiency and real-time performance, while the web interface is built using Python, providing a balance between scalability and ease of user interaction.
 
 2. Project Structure
 
