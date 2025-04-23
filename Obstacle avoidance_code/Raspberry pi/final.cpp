@@ -118,7 +118,7 @@ void followAruco() {
     }
 }
 
-// === 终端键盘输入设置 ===
+//=== Terminal keyboard input setup ===
 void enableKeyboardInput(termios& oldt) {
     termios newt;
     tcgetattr(STDIN_FILENO, &oldt);
