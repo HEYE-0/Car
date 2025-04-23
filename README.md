@@ -81,14 +81,31 @@ Ideal conditions: flat surface and good lighting for reliable vision.
 	•	Hardware: Raspberry Pi, Arduino UNO, L298N motor driver, ultrasonic sensors, Pi Camera V2
 	•	Communication: Serial via /dev/ttyACM0
 
+6.Hardware Architecture Overview
 
-6. License
+This project implements an intelligent smart car with autonomous obstacle avoidance and attempted target tracking capabilities. The hardware system is designed with the following components:
+	•	Drive System:
+The car is powered by four DC motors, each connected to a wheel to provide independent movement. This setup enables precise control for directional movement such as forward, backward, turning, and stopping.
+	•	Motor Control:
+Two L298N motor driver modules are used to control the four motors. Each L298N controls two motors, and together they provide full bidirectional control for the car’s movement.
+	•	Microcontroller (Arduino):
+An Arduino UNO serves as the intermediary controller. It receives high-level commands from the Raspberry Pi via serial communication and translates them into low-level motor control signals for the L298N modules.
+	•	Main Controller (Raspberry Pi):
+The Raspberry Pi acts as the central processing unit of the system. It is responsible for:
+	•	Sending movement commands to the Arduino
+	•	Processing visual data from the camera (ArUco marker recognition)
+	•	Hosting a remote web control interface
+	•	Managing control mode switching (manual, automatic, follow)
+
+This layered hardware design ensures a clear separation of responsibilities, where the Arduino handles low-level motor control, and the Raspberry Pi focuses on high-level decision-making and remote connectivity.
+
+7. License
 
 This project is licensed under the MIT License.
 Feel free to contribute or fork for your own enhancements.
 
 
-7. Author
+8. Author
 
 Author: HEYE-0
 GitHub: https://github.com/HEYE-0/Car
