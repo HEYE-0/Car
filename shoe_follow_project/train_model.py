@@ -46,8 +46,8 @@ model.compile(optimizer='adam',
               loss='binary_crossentropy',
               metrics=['accuracy'])
 
-# 训练
+# train
 history = model.fit(train_ds, validation_data=val_ds, epochs=5)
 
-# 保存模型
+# save the model
 model.save('shoe_model')
