@@ -60,7 +60,7 @@ void readArduino() {
     }
 }
 
-// === 跟随模式摄像头线程 ===
+//  === Camera thread for follow mode ===
 void followAruco() {
     Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_4X4_50);
     Ptr<aruco::DetectorParameters> params = aruco::DetectorParameters::create();
