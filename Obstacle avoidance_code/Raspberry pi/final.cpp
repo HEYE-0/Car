@@ -75,7 +75,7 @@ void followAruco() {
         mode_cv.wait(lock, [] { return mode == 'f' || !running; });
         if (!running) break;
 
-        // 用libcamera-still拍摄一张照片
+        // Capture an image using libcamera-still
         system("libcamera-still -o frame.jpg --width 640 --height 480 --nopreview -t 1000");
 
         Mat frame = imread("frame.jpg");
