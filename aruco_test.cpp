@@ -10,14 +10,14 @@ using namespace cv;
 int main() {
     cout << "🎯 Starting periodic ArUco marker detection...\n";
 
-    // 打开摄像头
-    VideoCapture cap(0); // 改为你的摄像头编号
+    // Open camera
+    VideoCapture cap(0); // Change to your camera index
     if (!cap.isOpened()) {
         cerr << "❌ Failed to open camera\n";
         return -1;
     }
 
-    // 使用 5x5 的 ArUco 字典，包含 ID 为 5 的图案
+    // Use 5x5 ArUco dictionary containing marker with ID 5
     Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_5X5_50);
     Ptr<aruco::DetectorParameters> parameters = aruco::DetectorParameters::create();
 
@@ -43,7 +43,7 @@ int main() {
             cout << "❌ No marker detected.\n";
         }
 
-        // 每 3 秒检测一次
+        // Detect every 3 seconds
         this_thread::sleep_for(chrono::seconds(3));
     }
 
