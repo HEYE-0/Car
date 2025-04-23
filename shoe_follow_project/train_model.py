@@ -35,11 +35,11 @@ base_model = tf.keras.applications.MobileNetV2(input_shape=(IMG_SIZE, IMG_SIZE, 
                                                weights='imagenet')
 base_model.trainable = False
 
-# 构建模型
+# Build the model
 model = models.Sequential([
     base_model,
     layers.GlobalAveragePooling2D(),
-    layers.Dense(1, activation='sigmoid')  # 二分类：你的脚 or 不是你的脚
+    layers.Dense(1, activation='sigmoid')  # Binary Classification: Your Foot or Not Your Foot
 ])
 
 model.compile(optimizer='adam',
