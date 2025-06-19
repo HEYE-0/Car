@@ -135,7 +135,7 @@ void handleSignal(int signal) {
     running = false;
     mode_cv.notify_all();
     close(serial_port);
-    cout << "\n🚪 程序已退出\n";
+    cout << "\n🚪 The program has exited.\n";
     exit(0);
 }
 
@@ -146,7 +146,7 @@ int main() {
 
     this_thread::sleep_for(chrono::seconds(2));
     sendCommand('p');
-    cout << "🚗 默认进入自动模式 (p)，可切换 m=手动 f=跟随 ESC=退出\n";
+    cout << "🚗 Default to automatic mode (p)，Switchable m=Manual f=Follow ESC=Log out\n";
 
     thread reader(readArduino);
     thread camera(followAruco);
@@ -170,7 +170,7 @@ int main() {
                     }
                     mode_cv.notify_all();
                     sendCommand('p');
-                    cout << "🔁 自动模式\n";
+                    cout << "🔁 Auto mode\n";
                     break;
                 case 'm':
                     {
@@ -179,7 +179,7 @@ int main() {
                     }
                     mode_cv.notify_all();
                     sendCommand('m');
-                    cout << "🎮 手动模式\n";
+                    cout << "🎮 Manual mode\n";
                     break;
                 case 'f':
                     {
@@ -188,12 +188,12 @@ int main() {
                     }
                     mode_cv.notify_all();
                     sendCommand('f');
-                    cout << "👣 跟随模式 (拍照识别)\n";
+                    cout << "👣 Follow Mode (Photo Recognition)\n";
                     break;
                 case 27:
                     running = false;
                     mode_cv.notify_all();
-                    cout << "🛑 ESC 退出程序\n";
+                    cout << "🛑 ESC Exit the program\n";
                     break;
             }
         }
