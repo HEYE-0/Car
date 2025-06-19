@@ -146,7 +146,7 @@ int main() {
 
     this_thread::sleep_for(chrono::seconds(2));
     sendCommand('p');
-    cout << "🚗 Default to automatic mode (p)，Switchable m=Manual f=Follow ESC=Exit\n";
+    cout << "🚗 Default to automatic mode (p)，Switchable m=manual f=follow ESC=exit\n";
 
     thread reader(readArduino);
     thread camera(followAruco);
