@@ -15,16 +15,16 @@
 using namespace std;
 using namespace cv;
 
-// --- 全局变量 ---
+// --- Global variables ---
 int serial_port;
 atomic<bool> running(true);
-atomic<char> mode('p');  // 初始为自动模式
+atomic<char> mode('p');  // Initial setting is automatic mode.
 atomic<bool> tagFound(false);
 
 mutex mode_mutex;
 condition_variable mode_cv;
 
-// --- 串口初始化 ---
+// --- Serial port initialization ---
 bool setupSerial(const string& port_name = "/dev/ttyACM0", int baud_rate = B9600) {
     serial_port = open(port_name.c_str(), O_RDWR);
     if (serial_port < 0) {
@@ -63,7 +63,7 @@ void readArduino() {
     }
 }
 
-// 摄像头跟踪线程（事件驱动）
+// Camera tracking thread (event-driven)
 void followAruco() {
     VideoCapture cap(0);
     if (!cap.isOpened()) {
@@ -155,7 +155,7 @@ void handleSignal(int signal) {
     running = false;
     mode_cv.notify_all();
     close(serial_port);
-    cout << "\n🚪 程序已退出\n";
+    cout << "\n🚪 The program has exited.\n";
     exit(0);
 }
 
@@ -167,7 +167,7 @@ int main() {
     this_thread::sleep_for(chrono::seconds(2));
 
     sendCommand('p');
-    cout << "🚗 默认进入自动模式 (p)，可切换 m=手动 f=跟随 ESC=退出\n";
+    cout << "🚗 Default to auto mode (p), can switch m=manual f=follow ESC=exit\n";
 
     thread reader(readArduino);
     thread camera(followAruco);
@@ -193,7 +193,7 @@ int main() {
                     }
                     mode_cv.notify_all();
                     sendCommand('p');
-                    cout << "🔁 切换为自动避障模式\n";
+                    cout << "🔁 Switch to automatic obstacle avoidance mode\n";
                     break;
                 case 'm':
                     {
@@ -202,7 +202,7 @@ int main() {
                     }
                     mode_cv.notify_all();
                     sendCommand('o');
-                    cout << "🎮 手动控制模式\n";
+                    cout << "🎮 Manual control mode\n";
                     break;
                 case 'f':
                     {
@@ -211,16 +211,16 @@ int main() {
                     }
                     mode_cv.notify_all();
                     sendCommand('f');
-                    cout << "👣 跟随模式启动 (摄像头识别)\n";
+                    cout << "👣 Follow Mode Activated (Camera Recognition)\n";
                     break;
                 case 27:
                     running = false;
                     mode_cv.notify_all();
-                    cout << "🛑 ESC 退出程序\n";
+                    cout << "🛑 ESC Exit program\n";
                     break;
             }
         }
-        this_thread::yield(); // 非阻塞等待
+        this_thread::yield(); // Non-blocking wait
     }
 
     reader.join();
