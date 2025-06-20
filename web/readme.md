@@ -1,1 +1,0 @@
-This webpage is built using Flask and HTML files. The rpi_config file contains the Raspberry Pi's IP address and port information. The purpose is to enable website-based control of the car from the Ubuntu side.
