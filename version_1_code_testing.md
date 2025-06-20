@@ -11,7 +11,7 @@
 
 | Component | Description |
 |-----------|-------------|
-| Controller | Arduino UNO |
+| Controller | Raspberry Pi |
 | Sensors | Ultrasonic sensor (HC-SR04) |
 | Communication | Bluetooth Serial Module HC-05 |
 | Motor Driver | L298N Dual H-Bridge Motor Driver |
