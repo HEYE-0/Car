@@ -28,7 +28,7 @@
    - Message `"Connected"` received successfully
 
 2. **Obstacle Avoidance Test**
-   - Upload Version 1 code to Arduino
+   - Upload Version 1 code to the project
    - Power on the car, it starts moving
    - Ultrasonic sensor measures distance in front:
      - If distance > 25cm: move forward
