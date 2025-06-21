@@ -1,4 +1,4 @@
-# 🚗 Bluetooth-Based Obstacle Avoidance Car - Experiment Log (Version 1)
+ # 🚗 Bluetooth-Based Obstacle Avoidance Car - Experiment Log (Version 1)
 
 > 📅 Date: June 20, 2025  
 > 🧪 Code Version: Version 1  
@@ -73,6 +73,7 @@
 - **Possible Causes**:
   - Manual control lacks mode switching logic
   - Auto and manual code not modularized
+
 
 ---
 
