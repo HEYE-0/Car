@@ -86,7 +86,6 @@
 
 4. **Code Refactoring**
    - Separate logic into sensing layer and control layer
-   - Modularize Bluetooth handler and obstacle handler
 
 ---
 
@@ -107,4 +106,4 @@
 
 ## 🏁 Conclusion
 
-Version 1 of the Bluetooth-based obstacle avoidance car demonstrates basic functionality but still requires improvements in detection accuracy and turning control. The next version will focus on refining logic and hardware integration for more stable behavior.
+Version 1 of the obstacle avoidance car demonstrates basic functionality but still requires improvements in detection accuracy and turning control. The next version will focus on refining logic and hardware integration for more stable behavior.
