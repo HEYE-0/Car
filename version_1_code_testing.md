@@ -21,18 +21,14 @@
 
 ## 🧪 Test Procedure
 
-1. **Bluetooth Connectivity Test**
-   - Open Bluetooth terminal app on phone and connect to HC-05
-   - Message `"Connected"` received successfully
-
-2. **Obstacle Avoidance Test**
+1. **Obstacle Avoidance Test**
    - Upload Version 1 code to the project
    - Power on the car, it starts moving
    - Ultrasonic sensor measures distance in front:
      - If distance > 25cm: move forward
      - If distance ≤ 25cm: stop and turn (random left/right)
 
-3. **Manual Control Test**
+2. **Manual Control Test**
    - Send commands via Bluetooth (e.g., `F` for forward, `B` for backward)
    - Commands are received and executed, but conflict with auto mode
 
@@ -42,7 +38,6 @@
 
 | Item | Outcome |
 |------|---------|
-| Bluetooth connection | Successful |
 | Manual command response | Successful |
 | Obstacle avoidance logic | Partially effective |
 | Car behavior | Can detect and avoid obstacles to some extent |
