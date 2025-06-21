@@ -1,5 +1,6 @@
 // 文件结构说明： // File structure description
 // motor.h / motor.cpp        -> 控制电机类 // Motor control class
 // ultrasonic.h / ultrasonic.cpp -> 超声波传感器类（支持 callback） // Ultrasonic sensor class (with callback support)
+// camera.h / camera.cpp      -> 摄像头控制类，实现实时视频捕捉 // Camera control class (real-time video capture)
 // robot.h / robot.cpp        -> 小车逻辑类，继承 callback 接口 // Robot logic class, implements callback interface
 // main.cpp                  -> 主程序入口 // Main program entry
