@@ -13,11 +13,9 @@
 |-----------|-------------|
 | Controller | Raspberry Pi |
 | Sensors | Ultrasonic sensor (HC-SR04) |
-| Communication | Bluetooth Serial Module HC-05 |
 | Motor Driver | L298N Dual H-Bridge Motor Driver |
-| Car Structure | 3-wheel platform (2 drive wheels + 1 universal wheel) |
-| Power Supply | 7.4V Li-ion Battery |
-| Control Interface | Android Bluetooth Terminal App |
+| Car Structure | 4-wheel platform |
+| Power Supply | 12V Li-ion Battery |
 
 ---
 
