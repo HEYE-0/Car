@@ -6,24 +6,24 @@
 int main() {
     wiringPiSetup();
 
-    // 初始化小车控制类
+    // Initialize the robot control class
     Robot robot;
 
-    // 初始化摄像头类
+    // Initialize the camera class
     Camera cam;
 
-    // 启动摄像头图像捕捉线程
+    // Start the camera capture thread
     std::thread camThread([&cam]() {
-        cam.startCapture();  // 实时显示图像，ESC 退出
+        cam.startCapture();  // Real-time image display, exit with ESC
     });
 
-    // 小车正常运行
+    // Robot runs continuously
     while (true) {
         robot.moveForward();
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
-    camThread.join();  // 等待摄像头线程结束（正常不会到达）
+    camThread.join();  // Wait for the camera thread to finish (normally never reached)
 
     return 0;
 }
