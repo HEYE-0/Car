@@ -41,14 +41,14 @@ float Ultrasonic::getDistance() {
     auto start_time = steady_clock::now();
     auto timeout = timespec{0, 100000000}; // 100ms
 
-    // 等待上升沿
+    // Waiting for rising edge
     if (gpiod_line_event_wait(_echo, &timeout) != 1 ||
         gpiod_line_event_read(_echo, &event) != 0 || event.event_type != GPIOD_LINE_EVENT_RISING_EDGE) {
-        return -1.0f;  // 超时或错误
+        return -1.0f;  // Timeout or error
     }
     auto echo_start = steady_clock::now();
 
-    // 等待下降沿
+    // Wait for falling edge
     if (gpiod_line_event_wait(_echo, &timeout) != 1 ||
         gpiod_line_event_read(_echo, &event) != 0 || event.event_type != GPIOD_LINE_EVENT_FALLING_EDGE) {
         return -1.0f;
