@@ -2,7 +2,7 @@
 #include <iostream>
 
 Camera::Camera() {
-    cap.open(1); // 默认打开 /dev/video0
+    cap.open(1); // Open by default /dev/video0
     if (!cap.isOpened()) {
         std::cerr << "[Camera] Failed to open camera device." << std::endl;
     }
