@@ -1,31 +1,39 @@
 // controlpanel.h / controlpanel.cpp
-// Qt 控制面板类，提供按钮、滑块、图像显示、状态监控等图形界面功能
+// Qt 控制面板类：提供按钮、滑块、图像显示、状态监控等图形界面功能
+// 增加对 TaskScheduler 的调用以实现周期任务调度（替代原 QTimer）
 // Qt control panel class: provides buttons, sliders, image display, and status monitoring GUI
+// Now integrates TaskScheduler to manage periodic tasks (replacing QTimer)
 
 // main_gui.cpp
 // Qt 程序主入口，创建并显示控制面板窗口
 // Qt application entry point: initializes and displays the control panel
 
+// scheduler.h / scheduler.cpp
+// 实时任务调度器类：支持添加多个周期性任务，每个任务由独立线程执行，保证实时性与解耦
+// 并提供执行时长统计，用于延迟分析
+// Real-time task scheduler: supports adding multiple periodic tasks, each runs in a dedicated thread
+// Execution time logging is built in to support delay profiling
+
 // robot.h / robot.cpp
-// 小车整体逻辑类，封装电机与超声波模块，支持速度控制与传感器读取
+// 小车整体逻辑类：封装电机与超声波模块，支持速度控制与传感器读取
 // Robot logic class: integrates motor and ultrasonic control, supports speed input and sensor queries
 
 // motor.h / motor.cpp
-// 电机驱动类，控制单个电机的前进、后退与停止（使用 PWM）
+// 电机驱动类：控制单个电机的前进、后退与停止（使用 PWM）
 // Motor control class: drives a single motor with forward/backward/stop (via PWM)
 
 // ultrasonic.h / ultrasonic.cpp
-// 超声波传感器类，测距功能基于 chrono 实现高精度阻塞检测
+// 超声波传感器类：测距功能基于 chrono 实现高精度阻塞检测
 // Ultrasonic sensor class: uses std::chrono for accurate distance measurement
 
 // camera.h / camera.cpp
-// 摄像头控制类，提供 readFrame() 接口用于 Qt 中实时图像获取与显示
+// 摄像头控制类：提供 readFrame() 接口用于 Qt 中实时图像获取与显示
 // Camera control class: provides readFrame() interface for real-time image capture in Qt
 
 // test_robot.cpp
-// 控制台测试程序，验证电机转动与超声波测距功能是否正常
+// 控制台测试程序：验证电机转动与超声波测距功能是否正常
 // Console test program: verifies motor movement and ultrasonic sensor functionality
 
 // Makefile
-// 项目构建配置，支持 Qt GUI 程序（robot_gui）与测试程序（test_robot）编译
-// Build configuration file: compiles both the Qt GUI application (robot_gui) and test program (test_robot)
+// 项目构建配置：支持 Qt GUI 程序（robot_gui）、控制台测试程序（test_robot）与调度器模块（scheduler）的编译链接
+// Build configuration file: compiles the Qt GUI application (robot_gui), test program (test_robot), and the scheduler module
