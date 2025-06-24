@@ -6,6 +6,12 @@ This project is developed based on the Raspberry Pi 5 and fully implemented in C
 
 ---
 
+## ✅ Project File Description
+
+**UPDATE:**
+
+Record optimisation content for different versions of projects
+---
 ## 🧱 Project Structure
 
 | Module | Description |
