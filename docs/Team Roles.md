@@ -8,14 +8,14 @@
 - **Zhaojie Zhu** (GitHub: zzjzdd)
 
 ## Project Overview
-This project is a Bluetooth-based obstacle avoidance vehicle system, consisting of embedded programming, circuit design, hardware integration, and documentation.
+This project is an obstacle avoidance vehicle system, consisting of embedded programming, circuit design, hardware integration, and documentation.
 
 ## Task Distribution
 
 ### Ye He
 - Led development of obstacle avoidance logic and vehicle motion control.
-- Wrote and optimized the sensor fusion algorithm (ultrasonic + infrared).
-- Assisted in hardware wiring and Bluetooth communication testing.
+- Wrote and optimized the sensor fusion algorithm (ultrasonic).
+- Assisted in hardware wiring.
 - Helped review the final documentation and video demo.
 
 ### Hao Wu
