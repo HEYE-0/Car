@@ -44,3 +44,78 @@ Install dependencies (on Raspberry Pi):
 ```bash
 sudo apt update
 sudo apt install qt5-default libopencv-dev libgpiod-dev
+```
+
+---
+
+## ⚙️ Build & Run
+
+### 🔧 Compile
+
+```bash
+make         # Compile the main Qt GUI (robot_gui)
+make test    # Compile CLI-based test tool (test_robot)
+```
+
+### 🚀 Run
+
+```bash
+./robot_gui         # Launch Qt GUI
+sudo ./test_robot   # Run console test (requires root for GPIO access)
+```
+
+---
+
+## 🧠 Real-Time Scheduling Design
+
+- All real-time operations (camera updates and ultrasonic sensor reads) are handled via a custom `TaskScheduler` class.
+- Each task is registered with a fixed execution interval (e.g., 50 ms for camera, 300 ms for sensors).
+- The scheduler uses `std::condition_variable::wait_until()` to reduce CPU usage and ensure accurate task timing.
+- Each task logs its execution duration using `std::chrono`, enabling basic delay analysis and monitoring.
+
+---
+
+## 🖼️ GUI Features
+
+- **Directional control buttons**: Forward, Backward, Left, Right
+- **Speed control slider**: Adjust motor PWM output (0–1023)
+- **Live camera view**: Real-time feed from front camera (OpenCV)
+- **Ultrasonic readings**: Display of 3 sensor distances (front, left, right)
+- **Status label**: Shows current robot status (e.g., Moving forward, Stopped)
+- **Start / Stop buttons**: Initialize or shut down robot and sensors
+
+---
+
+## ✅ Highlights
+
+- Fully modular object-oriented architecture
+- Non-blocking, thread-safe real-time task management
+- Accurate distance measurement using `std::chrono`
+- Real-time camera feed integration using OpenCV
+- Clean, extensible GUI design using Qt widgets
+- Code fully written in C++ (no Python or Arduino)
+
+---
+
+## 📷 Screenshots / Demo
+
+> _(Insert screenshots or a link to a short video here)_
+
+- Qt GUI interface preview
+- Hardware wiring diagram (motors, sensors, camera)
+
+---
+
+## 👨‍💻 Team Members
+
+- Ye He (2966900H)
+- Yuan Zhao (3026815Z)
+- Hao Wu (2982755W)
+- Xiaoyun Ma (3010324M)
+- Zhaojie Zhu (2982461Z)
+
+---
+
+## 📄 License
+
+This project was developed as part of the ENG5220 Embedded Systems coursework at the University of Glasgow. All rights reserved by the authors.
