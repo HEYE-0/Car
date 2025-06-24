@@ -6,40 +6,42 @@ This project is developed based on the Raspberry Pi 5 and fully implemented in C
 
 ---
 
-# Project Directory Overview
+## 📂 Project Folder Overview
 
-This document provides an overview of the main folders in this GitHub project and explains the purpose of each.
+### 🔄 UPDATE
 
-## 📁 UPDATE
+Contains version transition documentation. Each file outlines the changes made between specific software versions, providing a clear development history.
 
-Contains version transition documentation. Each file outlines the changes made between specific software versions, providing a clear development history. This is useful for tracking updates, debugging, and understanding the evolution of the system.
-
+#### Files:
 - `PREVIOUS TO VERSION1.txt`
 - `VERSION1 TO VERSION2.txt`
 - `VERSION2 TO VERSION3.txt`
 - `VERSION3 TO VERSION4.txt`
 
-## 📁 docs
+### 📄 docs
 
-This folder contains important documentation files related to system design and hardware specifications.
+This folder includes essential system documentation.
 
-- `Structural description.txt`: Textual overview of the system's structural components.
-- `Hardware_Specifications.pdf`: Detailed technical specifications of the hardware used.
-- `System architecture.pdf`: A high-level architecture diagram or explanation of the system.
+#### Files:
+- `Structural description.txt`: Overview of the system’s structure.
+- `Hardware_Specifications.pdf`: Technical details about the hardware components.
+- `System architecture.pdf`: Explanation of the overall system design.
 
-## 📁 media
+### 🎞 media
 
-Multimedia content related to the project is stored here.
+Stores multimedia assets demonstrating the system.
 
-- `demo.mp4`: A demonstration video showcasing system functionality.
-- `demostration video link.txt`: A text file containing a URL or reference to an online video resource.
+#### Files:
+- `demo.mp4`: Project demonstration video.
+- `demostration video link.txt`: Link to an online version of the demonstration.
 
-## 📁 src
+### 🧠 src
 
-This is the source code directory, containing both archived and current code.
+The source code directory. It contains both development history and the final implementation.
 
-- `old versions/`: Deprecated or earlier code iterations, kept for reference or rollback purposes.
-- `final version/`: The most recent and stable version of the project's source code.
+#### Subfolders:
+- `old versions/`: Legacy code for reference.
+- `final version/`: Stable, up-to-date implementation.
 
 ---
 ## 🧱 Project Structure
