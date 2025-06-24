@@ -98,8 +98,8 @@ sudo ./test_robot   # Run the test program (requires root for GPIO access)
 
 ## 📷 Screenshots / Demo
 
-> (Insert project screenshots or video links here)
-
+[(https://t.bilibili.com/1058982800262168584?share_source=pc_native
+https://youtu.be/4GdFb-aglIA)]
 - Preview of the Qt control panel
 - Hardware wiring diagram (motors, sensors, camera)
 
