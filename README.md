@@ -6,11 +6,41 @@ This project is developed based on the Raspberry Pi 5 and fully implemented in C
 
 ---
 
-## ✅ Project File Description
+# Project Directory Overview
 
-**UPDATE:**
+This document provides an overview of the main folders in this GitHub project and explains the purpose of each.
 
-Record optimisation content for different versions of projects
+## 📁 UPDATE
+
+Contains version transition documentation. Each file outlines the changes made between specific software versions, providing a clear development history. This is useful for tracking updates, debugging, and understanding the evolution of the system.
+
+- `PREVIOUS TO VERSION1.txt`
+- `VERSION1 TO VERSION2.txt`
+- `VERSION2 TO VERSION3.txt`
+- `VERSION3 TO VERSION4.txt`
+
+## 📁 docs
+
+This folder contains important documentation files related to system design and hardware specifications.
+
+- `Structural description.txt`: Textual overview of the system's structural components.
+- `Hardware_Specifications.pdf`: Detailed technical specifications of the hardware used.
+- `System architecture.pdf`: A high-level architecture diagram or explanation of the system.
+
+## 📁 media
+
+Multimedia content related to the project is stored here.
+
+- `demo.mp4`: A demonstration video showcasing system functionality.
+- `demostration video link.txt`: A text file containing a URL or reference to an online video resource.
+
+## 📁 src
+
+This is the source code directory, containing both archived and current code.
+
+- `old versions/`: Deprecated or earlier code iterations, kept for reference or rollback purposes.
+- `final version/`: The most recent and stable version of the project's source code.
+
 ---
 ## 🧱 Project Structure
 
