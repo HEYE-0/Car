@@ -1,35 +1,27 @@
-// ===================== Makefile =====================
-QTFLAGS = `pkg-config --cflags --libs Qt5Widgets Qt5Gui Qt5Core`
-OPENCVFLAGS = `pkg-config --cflags --libs opencv4`
+# Project Makefile (Updated for Qt, OpenCV, libgpiod)
+CXX = g++
+CXXFLAGS = -Wall -std=c++17
 
-all: robot_gui test_robot
+QTFLAGS = `pkg-config --cflags Qt5Widgets Qt5Gui Qt5Core`
+QTLIBS  = `pkg-config --libs Qt5Widgets Qt5Gui Qt5Core`
 
-robot_gui: main_gui.o controlpanel.o robot.o motor.o ultrasonic.o camera.o
-	g++ -o robot_gui main_gui.o controlpanel.o robot.o motor.o ultrasonic.o camera.o -lgpiod -lwiringPi -pthread $(QTFLAGS) $(OPENCVFLAGS) -std=c++11
+OPENCVFLAGS = `pkg-config --cflags opencv4`
+OPENCVLIBS  = `pkg-config --libs opencv4`
 
-test_robot: test_robot.o robot.o motor.o ultrasonic.o
-	g++ -o test_robot test_robot.o robot.o motor.o ultrasonic.o -lgpiod -lwiringPi -std=c++11
+LIBS = -lgpiod -lpthread
 
-main_gui.o: main_gui.cpp controlpanel.h
-	g++ -c main_gui.cpp $(QTFLAGS)
+SRC = main.cpp controlpanel.cpp camera.cpp robot.cpp motor.cpp ultrasonic.cpp scheduler.cpp
+OBJ = $(SRC:.cpp=.o)
 
-controlpanel.o: controlpanel.cpp controlpanel.h robot.h camera.h
-	g++ -c controlpanel.cpp $(QTFLAGS) $(OPENCVFLAGS)
+TARGET = robot_gui
 
-robot.o: robot.cpp robot.h motor.h ultrasonic.h
-	g++ -c robot.cpp
+default: $(TARGET)
 
-motor.o: motor.cpp motor.h
-	g++ -c motor.cpp
+$(TARGET): $(OBJ)
+	$(CXX) -o $@ $^ $(QTLIBS) $(OPENCVLIBS) $(LIBS)
 
-ultrasonic.o: ultrasonic.cpp ultrasonic.h
-	g++ -c ultrasonic.cpp
-
-camera.o: camera.cpp camera.h
-	g++ -c camera.cpp $(OPENCVFLAGS)
-
-test_robot.o: test_robot.cpp robot.h motor.h ultrasonic.h
-	g++ -c test_robot.cpp
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(QTFLAGS) $(OPENCVFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o robot_gui test_robot
+	rm -f *.o $(TARGET)
