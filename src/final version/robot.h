@@ -15,9 +15,9 @@ private:
     Motor* motors[4];
     Ultrasonic* sensors[3];
 
-    void moveForward();
-    void turnLeft();
-    void turnRight();
+    void moveForward(int speed);
+    void turnLeft(int speed);
+    void turnRight(int speed);
 
 };
 
