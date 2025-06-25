@@ -1,10 +1,11 @@
+// Updated controlpanel.cpp with working scheduler and statusLabel
 #include "controlpanel.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDebug>
 #include <chrono>
 
-ControlPanel::ControlPanel(QWidget *parent) : QWidget(parent), robot(new Robot()), scheduler() {
+ControlPanel::ControlPanel(QWidget *parent) : QWidget(parent), robot(new Robot()) {
     setupUI();
 }
 
@@ -117,6 +118,5 @@ void ControlPanel::updateUltrasonic() {
 }
 
 void ControlPanel::updateCamera() {
-    // placeholder for camera frame handling
     qDebug() << "Camera updated.";
 }
