@@ -1,4 +1,4 @@
-// Updated controlpanel.h
+// Updated controlpanel.h with Q_OBJECT macro
 #ifndef CONTROLPANEL_H
 #define CONTROLPANEL_H
 
