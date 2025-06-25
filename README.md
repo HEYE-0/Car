@@ -103,12 +103,6 @@ make test    # Build the command-line testing tool (test_robot)
 ```
 ### 🚀 Run the Application
 
-#### ✅ On a graphical desktop or VNC:
-
-```bash
-./robot_gui
-```
-
 #### 🚧 If using SSH (no desktop):
 
 ```bash
