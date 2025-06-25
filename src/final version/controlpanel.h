@@ -1,4 +1,4 @@
-// controlpanel.h
+// Updated controlpanel.h
 #ifndef CONTROLPANEL_H
 #define CONTROLPANEL_H
 
@@ -6,22 +6,13 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QSlider>
-#include <QTimer>
-#include <QImage>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QGridLayout>
-#include <QPixmap>
-#include <QThread>
-#include <opencv2/opencv.hpp>
 #include "robot.h"
-#include "camera.h"
+#include "scheduler.h"
 
 class ControlPanel : public QWidget {
     Q_OBJECT
-
 public:
-    ControlPanel(QWidget *parent = nullptr);
+    explicit ControlPanel(QWidget *parent = nullptr);
     ~ControlPanel();
 
 private slots:
@@ -32,25 +23,24 @@ private slots:
     void onLeftClicked();
     void onRightClicked();
     void onHaltClicked();
-    void updateUltrasonic();
-    void updateCamera();
-    void onSpeedChanged(int value);
 
 private:
-    QPushButton *btnStart, *btnStop;
-    QPushButton *btnForward, *btnBackward, *btnLeft, *btnRight, *btnHalt;
+    void setupUI();
+    void updateUltrasonic();
+    void updateCamera();
+
+    Robot *robot;
+    TaskScheduler scheduler;
+
+    QPushButton *startButton;
+    QPushButton *stopButton;
+    QPushButton *forwardButton;
+    QPushButton *backwardButton;
+    QPushButton *leftButton;
+    QPushButton *rightButton;
+    QPushButton *haltButton;
     QSlider *speedSlider;
-    QLabel *labelSpeed;
-    QLabel *labelUltrasonic[3];
-    QLabel *labelStatus;
-    QLabel *labelCamera;
-
-    QTimer *sensorTimer;
-    QTimer *cameraTimer;
-
-    Robot *robot = nullptr;
-    Camera *camera = nullptr;
-    int currentSpeed = 512;
+    QLabel *statusLabel;
 };
 
-#endif
+#endif // CONTROLPANEL_H
