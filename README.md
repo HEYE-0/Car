@@ -1,4 +1,4 @@
-# Bluetooth-Controlled Obstacle Avoidance Robot Project (Qt + C++)
+# Obstacle Avoidance Robot Project (Qt + C++)
 
 ## 📌 Project Overview
 
