@@ -1,4 +1,3 @@
-// scheduler.cpp
 #include "scheduler.h"
 #include <iostream>
 
@@ -38,7 +37,7 @@ void TaskScheduler::run() {
     std::unique_lock<std::mutex> lock(mtx);
     while (running) {
         auto now = std::chrono::steady_clock::now();
-        auto nextWakeup = now + std::chrono::milliseconds(1000); // initialize far future
+        auto nextWakeup = now + std::chrono::milliseconds(1000);
 
         for (auto& [name, task] : tasks) {
             if (now - task.lastRun >= std::chrono::milliseconds(task.interval)) {
@@ -49,7 +48,6 @@ void TaskScheduler::run() {
                 }
                 task.lastRun = now;
             }
-            // find the nearest next execution
             auto taskNext = task.lastRun + std::chrono::milliseconds(task.interval);
             if (taskNext < nextWakeup) nextWakeup = taskNext;
         }
