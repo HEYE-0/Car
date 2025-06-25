@@ -27,6 +27,8 @@ This folder includes essential system documentation.
 - `Hardware_Specifications.pdf`: Technical details about the hardware components.
 - `System architecture.pdf`: Explanation of the overall system design.
 - `Team Roles.md`: Division of team work.
+- `background.docx`:Background of this project.
+- `Project Revision Meeting Minutes.docx`: Meeting minutes.
 
 ### 🎞 media
 
