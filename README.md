@@ -108,7 +108,26 @@ make clean
 make         # Build the Qt GUI application (robot_gui)
 make test    # Build the command-line testing tool (test_robot)
 ```
+### 🚀 Run the Application
 
+#### ✅ On a graphical desktop or VNC:
+
+```bash
+./robot_gui
+```
+
+#### 🚧 If using SSH (no desktop):
+
+```bash
+export QT_QPA_PLATFORM=offscreen
+./robot_gui
+```
+
+#### 🧪 Run the test robot program:
+
+```bash
+sudo ./test_robot
+```
 ---
 
 ## 🧠 Real-Time Scheduling Design
