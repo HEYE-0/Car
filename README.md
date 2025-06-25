@@ -80,11 +80,6 @@ The source code directory. It contains both development history and the final im
 
 Install dependencies on Raspberry Pi:
 
-```bash
-sudo apt update
-sudo apt install qt5-default libopencv-dev libgpiod-dev
-```
-
 ---
 
 ## ⚙️ Build & Run
