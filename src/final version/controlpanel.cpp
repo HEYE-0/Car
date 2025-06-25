@@ -80,21 +80,21 @@ void ControlPanel::onStartClicked() {
     if (!camera) camera = new Camera();
     labelStatus->setText("Status: Running");
 
-    scheduler.addTask([this]() {
+    scheduler.addTask("UltrasonicTask",300,[this]() {
         auto start = std::chrono::steady_clock::now();
         this->updateUltrasonic();
         auto end = std::chrono::steady_clock::now();
         qDebug() << "[Delay] Ultrasonic took "
                  << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms";
-    }, 300);
+    });
 
-    scheduler.addTask([this]() {
+    scheduler.addTask("CameraTask",50,[this]() {
         auto start = std::chrono::steady_clock::now();
         this->updateCamera();
         auto end = std::chrono::steady_clock::now();
         qDebug() << "[Delay] Camera took "
                  << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms";
-    }, 50);
+    });
 
     scheduler.start();
 }
