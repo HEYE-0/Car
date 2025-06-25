@@ -1,15 +1,25 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 
+#include <gpiod.h>
+#include <string>
+
 class Motor {
 public:
-    Motor(int in1, int in2, int pwm);
+    Motor(int in1_line, int in2_line, int pwm_line);
+    ~Motor();
+
     void forward(int speed);
     void backward(int speed);
     void stop();
 
 private:
-    int _in1, _in2, _pwm;
+    gpiod_chip *chip;
+    gpiod_line *in1;
+    gpiod_line *in2;
+    gpiod_line *pwm;
+
+    void setLine(gpiod_line* line, int value);
 };
 
-#endif
+#endif // MOTOR_H
