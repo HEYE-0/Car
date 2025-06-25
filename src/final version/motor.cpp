@@ -1,4 +1,3 @@
-#include <wiringPi.h>
 #include "motor.h"
 
 Motor::Motor(int in1, int in2, int pwm) : _in1(in1), _in2(in2), _pwm(pwm) {
