@@ -1,4 +1,3 @@
-// scheduler.h
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
@@ -35,4 +34,4 @@ private:
     void run();
 };
 
-#endif
+#endif // SCHEDULER_H
