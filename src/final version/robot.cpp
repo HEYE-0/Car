@@ -2,10 +2,9 @@
 #include <iostream>
 
 Robot::Robot() : leftMotor(1, 2, 3), rightMotor(4, 5, 6) {
-    // Initialize sensors if needed
-    sensors.push_back(new Ultrasonic(17, 18)); // Front
-    sensors.push_back(new Ultrasonic(27, 22)); // Left
-    sensors.push_back(new Ultrasonic(23, 24)); // Right
+    sensors.push_back(new Ultrasonic("gpiochip0", 17, 18, 0)); // Front
+    sensors.push_back(new Ultrasonic("gpiochip0", 27, 22, 1)); // Left
+    sensors.push_back(new Ultrasonic("gpiochip0", 23, 24, 2)); // Right
 }
 
 Robot::~Robot() {
@@ -50,8 +49,8 @@ void Robot::stopAll() {
 }
 
 float Robot::getSensorDistance(int index) {
-    if (index >= 0 && index < sensors.size()) {
+    if (index >= 0 && static_cast<size_t>(index) < sensors.size()) {
         return sensors[index]->getDistance();
     }
     return -1.0f;
-} 
+}
