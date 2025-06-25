@@ -9,6 +9,7 @@ public:
     Robot();
     ~Robot();
     void onTooClose(float distance, int sensorId) override;
+    void stopAll();
 
 private:
     Motor* motors[4];
@@ -17,7 +18,7 @@ private:
     void moveForward();
     void turnLeft();
     void turnRight();
-    void stopAll();
+
 };
 
 #endif
