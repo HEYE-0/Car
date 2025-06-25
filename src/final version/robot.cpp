@@ -1,68 +1,57 @@
 #include "robot.h"
-#include <thread>
-#include <chrono>
+#include <iostream>
 
-Robot::Robot() {
-    motors[0] = new Motor(0, 1, 26);   // Front left
-    motors[1] = new Motor(2, 3, 23);   // Rear left
-    motors[2] = new Motor(21, 22, 28); // Front right
-    motors[3] = new Motor(24, 25, 29); // Rear right
-
-    sensors[0] = new Ultrasonic(15, 16, 0); // Front
-    sensors[1] = new Ultrasonic(4, 5, 1);   // Left
-    sensors[2] = new Ultrasonic(6, 7, 2);   // Right
-
-    for (int i = 0; i < 3; ++i) {
-        sensors[i]->registerCallback(this);
-        sensors[i]->start();
-    }
+Robot::Robot() : leftMotor(1, 2, 3), rightMotor(4, 5, 6) {
+    // Initialize sensors if needed
+    sensors.push_back(new Ultrasonic(17, 18)); // Front
+    sensors.push_back(new Ultrasonic(27, 22)); // Left
+    sensors.push_back(new Ultrasonic(23, 24)); // Right
 }
 
 Robot::~Robot() {
-    for (int i = 0; i < 4; ++i) delete motors[i];
-    for (int i = 0; i < 3; ++i) delete sensors[i];
+    for (auto* sensor : sensors) {
+        delete sensor;
+    }
 }
 
 void Robot::moveForward() {
-    for (int i = 0; i < 4; ++i) motors[i]->forward(512);
+    leftMotor.forward(100);
+    rightMotor.forward(100);
 }
 
 void Robot::turnLeft() {
-    motors[0]->backward(512);
-    motors[1]->backward(512);
-    motors[2]->forward(512);
-    motors[3]->forward(512);
+    leftMotor.backward(100);
+    rightMotor.forward(100);
 }
 
 void Robot::turnRight() {
-    motors[0]->forward(512);
-    motors[1]->forward(512);
-    motors[2]->backward(512);
-    motors[3]->backward(512);
+    leftMotor.forward(100);
+    rightMotor.backward(100);
+}
+
+void Robot::moveForward(int speed) {
+    leftMotor.forward(speed);
+    rightMotor.forward(speed);
+}
+
+void Robot::turnLeft(int speed) {
+    leftMotor.backward(speed);
+    rightMotor.forward(speed);
+}
+
+void Robot::turnRight(int speed) {
+    leftMotor.forward(speed);
+    rightMotor.backward(speed);
 }
 
 void Robot::stopAll() {
-    for (int i = 0; i < 4; ++i) motors[i]->stop();
+    leftMotor.stop();
+    rightMotor.stop();
 }
 
-void Robot::onTooClose(float distance, int sensorId) {
-    stopAll();
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
-
-    if (sensorId == 0) { // Front
-        float leftDist = sensors[1]->getDistance();
-        float rightDist = sensors[2]->getDistance();
-        if (leftDist > rightDist) turnLeft();
-        else turnRight();
-        std::this_thread::sleep_for(std::chrono::milliseconds(400));
-        moveForward();
-    } else if (sensorId == 1) {
-        turnRight();
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
-        moveForward();
-    } else if (sensorId == 2) {
-        turnLeft();
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
-        moveForward();
+float Robot::getSensorDistance(int index) {
+    if (index >= 0 && index < sensors.size()) {
+        return sensors[index]->getDistance();
     }
-}
+    return -1.0f;
+} 
