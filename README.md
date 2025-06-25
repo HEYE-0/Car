@@ -89,18 +89,29 @@ sudo apt install qt5-default libopencv-dev libgpiod-dev
 
 ## ⚙️ Build & Run
 
-### 🔧 Build
+### 🔧 Dependency Installation (Run Once)
 
 ```bash
-make         # Build the Qt GUI application (robot_gui)
-make test    # Build the command-line testing tool (test_robot)
+sudo apt update
+sudo apt install -y qtbase5-dev qt5-qmake qttools5-dev-tools libopencv-dev libgpiod-dev build-essential pkg-config
 ```
 
-### 🚀 Run
+> If you plan to run GUI remotely (VNC), also run:
 
 ```bash
-./robot_gui         # Launch the Qt graphical control interface
-sudo ./test_robot   # Run the test program (requires root for GPIO access)
+sudo apt install realvnc-vnc-server
+sudo systemctl enable vncserver-x11-serviced.service
+sudo systemctl start vncserver-x11-serviced.service
+```
+
+---
+
+### 🔧 Build the Project
+
+```bash
+make clean
+make         # Build the Qt GUI application (robot_gui)
+make test    # Build the command-line testing tool (test_robot)
 ```
 
 ---
