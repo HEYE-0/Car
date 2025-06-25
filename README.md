@@ -91,13 +91,6 @@ sudo apt update
 sudo apt install -y qtbase5-dev qt5-qmake qttools5-dev-tools libopencv-dev libgpiod-dev build-essential pkg-config
 ```
 
-> If you plan to run GUI remotely (VNC), also run:
-
-```bash
-sudo apt install realvnc-vnc-server
-sudo systemctl enable vncserver-x11-serviced.service
-sudo systemctl start vncserver-x11-serviced.service
-```
 
 ---
 
