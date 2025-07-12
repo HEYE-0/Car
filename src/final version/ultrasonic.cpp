@@ -41,7 +41,7 @@ void Ultrasonic::stop() {
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _running = false;
-        _shouldMeasure = true;  // 触发唤醒以便退出
+        _shouldMeasure = true;  
         _cv.notify_one();
     }
     if (_thread.joinable()) {
@@ -61,7 +61,7 @@ void Ultrasonic::monitorLoop() {
         switch (_state) {
             case State::TRIGGER:
                 gpiod_line_set_value(_trig, 0);
-                for (volatile int i = 0; i < 50; ++i); // 短busy wait替代usleep
+                for (volatile int i = 0; i < 50; ++i); 
                 gpiod_line_set_value(_trig, 1);
                 for (volatile int i = 0; i < 200; ++i);
                 gpiod_line_set_value(_trig, 0);
