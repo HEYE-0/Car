@@ -77,6 +77,9 @@ The source code directory. It contains both development history and the final im
 - Kamera V2 (8MP, 1080p) camera module
 <img width="321" height="399" alt="截屏2025-07-14 11 03 15" src="https://github.com/user-attachments/assets/250092e1-948c-4080-8cf8-a821446ae4cf" />
 
+Mechanical Structure of the Car
+<img width="473" height="518" alt="截屏2025-07-14 11 19 20" src="https://github.com/user-attachments/assets/4d7e9d7f-c4ef-4ef5-b786-c3cdcc69fd56" />
+
 **Software:**
 
 - Qt 5 (`qtbase5-dev`)
