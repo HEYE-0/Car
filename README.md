@@ -69,6 +69,8 @@ The source code directory. It contains both development history and the final im
 
 Raspberry Pi 5
 4 DC motors + 2 L298N motor drivers
+
+
 - <img width="389" height="392" alt="截屏2025-07-14 11 05 58" src="https://github.com/user-attachments/assets/b3eb1580-111b-444c-98dc-e887f6472a42" />
 
 
@@ -80,6 +82,8 @@ Raspberry Pi 5
 
 
 Kamera V2 (8MP, 1080p) camera module
+
+
 <img width="389" height="392" alt="截屏2025-07-14 11 03 15" src="https://github.com/user-attachments/assets/250092e1-948c-4080-8cf8-a821446ae4cf" />
 
 
