@@ -104,6 +104,10 @@ Install dependencies on Raspberry Pi:
 
 ---
 
+## 5. System architecture
+This section provides a detailed description of the hardware wiring configuration between the Raspberry Pi 5, the motor driver modules (L298N), and the ultrasonic sensors (HC-SR04). The system utilizes two L298N motor drivers to independently control the four-wheel drive motors, while three ultrasonic sensors are used for real-time obstacle detection. Each module is connected to the Raspberry Pi's GPIO pins through designated physical pin mappings to ensure stable control and data acquisition. The wiring tables below outline the specific GPIO assignments for all modules.
+
+
 ## 5. Build & Run
 
 ###  Dependency Installation (Run Once)
