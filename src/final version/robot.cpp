@@ -1,31 +1,24 @@
 #include "robot.h"
-#include <iostream>
 
-Robot::Robot() : leftMotor(1, 2, 3), rightMotor(4, 5, 6) {
-    sensors.push_back(new Ultrasonic("gpiochip0", 17, 18, 0)); // Front
-    sensors.push_back(new Ultrasonic("gpiochip0", 27, 22, 1)); // Left
-    sensors.push_back(new Ultrasonic("gpiochip0", 23, 24, 2)); // Right
-}
+Robot::Robot()
+    : leftMotor("gpiochip0", 20, 21, 16),
+      rightMotor("gpiochip0", 19, 26, 13),
+      camera()
+{
+    // 初始化三个超声波传感器
+    sensors.push_back(new Ultrasonic("gpiochip0", 23, 24, 0)); // front
+    sensors.push_back(new Ultrasonic("gpiochip0", 17, 27, 1)); // left
+    sensors.push_back(new Ultrasonic("gpiochip0", 5, 6, 2));   // right
 
-Robot::~Robot() {
-    for (auto* sensor : sensors) {
-        delete sensor;
+    for (auto sensor : sensors) {
+        sensor->start();
     }
 }
 
-void Robot::moveForward() {
-    leftMotor.forward(100);
-    rightMotor.forward(100);
-}
-
-void Robot::turnLeft() {
-    leftMotor.backward(100);
-    rightMotor.forward(100);
-}
-
-void Robot::turnRight() {
-    leftMotor.forward(100);
-    rightMotor.backward(100);
+Robot::~Robot() {
+    for (auto sensor : sensors) {
+        delete sensor;
+    }
 }
 
 void Robot::moveForward(int speed) {
@@ -34,13 +27,13 @@ void Robot::moveForward(int speed) {
 }
 
 void Robot::turnLeft(int speed) {
-    leftMotor.backward(speed);
+    leftMotor.stop();
     rightMotor.forward(speed);
 }
 
 void Robot::turnRight(int speed) {
     leftMotor.forward(speed);
-    rightMotor.backward(speed);
+    rightMotor.stop();
 }
 
 void Robot::stopAll() {
@@ -48,9 +41,10 @@ void Robot::stopAll() {
     rightMotor.stop();
 }
 
-float Robot::getSensorDistance(int index) {
-    if (index >= 0 && static_cast<size_t>(index) < sensors.size()) {
-        return sensors[index]->getDistance();
-    }
-    return -1.0f;
+Ultrasonic* Robot::getUltrasonic(int index) {
+    return sensors[index];
+}
+
+Camera* Robot::getCamera() {
+    return &camera;
 }
