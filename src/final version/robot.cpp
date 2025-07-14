@@ -1,8 +1,8 @@
 #include "robot.h"
 
 Robot::Robot()
-    : leftMotor("gpiochip0", 20, 21, 16),
-      rightMotor("gpiochip0", 19, 26, 13),
+    : leftMotor(20, 21, 16),
+      rightMotor(19, 26, 13),
       camera()
 {
     // 初始化三个超声波传感器
@@ -10,6 +10,7 @@ Robot::Robot()
     sensors.push_back(new Ultrasonic("gpiochip0", 17, 27, 1)); // left
     sensors.push_back(new Ultrasonic("gpiochip0", 5, 6, 2));   // right
 
+    // 启动超声波传感器的监控线程
     for (auto sensor : sensors) {
         sensor->start();
     }
