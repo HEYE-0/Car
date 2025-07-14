@@ -1,12 +1,12 @@
 # Obstacle Avoidance Robot Project (Qt + C++)
 
-## 1.Project Overview
+## 1. Project Overview
 
 This project is developed based on the Raspberry Pi 5 and fully implemented in C++. It builds an autonomous obstacle avoidance robot system. A Qt graphical interface enables real-time control of the robot’s movement, motor speed adjustment, ultrasonic distance monitoring, and camera feed display. The architecture is modular and features a custom multithreaded real-time scheduler (TaskScheduler) to replace traditional polling, achieving soft real-time control.
 
 ---
 
-## 2.Project Folder Overview
+## 2. Project Folder Overview
 
 ### 🔄 UPDATE
 
@@ -47,7 +47,7 @@ The source code directory. It contains both development history and the final im
 - `final version/`: Stable, up-to-date implementation.
 
 ---
-## 🧱 Project Structure
+## 3. Project Structure
 
 | Module | Description |
 |--------|-------------|
@@ -63,7 +63,7 @@ The source code directory. It contains both development history and the final im
 
 ---
 
-## 🛠️ System Dependencies
+## 4. System Dependencies
 
 **Hardware:**
 
@@ -84,7 +84,7 @@ Install dependencies on Raspberry Pi:
 
 ---
 
-## ⚙️ Build & Run
+## 5. Build & Run
 
 ### 🔧 Dependency Installation (Run Once)
 
@@ -119,7 +119,7 @@ sudo ./test_robot
 ```
 ---
 
-## 🧠 Real-Time Scheduling Design
+## 6. Real-Time Scheduling Design
 
 - All real-time tasks (camera capture and ultrasonic measurement) are registered in `TaskScheduler` and executed on separate threads.
 - Each task runs on a fixed interval (e.g., camera every 50ms, ultrasonic every 300ms).
@@ -128,7 +128,7 @@ sudo ./test_robot
 
 ---
 
-## 🖼️ GUI Features
+## 7. GUI Features
 
 - **Directional control buttons**: Forward, Backward, Left, Right
 - **Speed control slider**: Adjusts motor PWM output (0–1023)
@@ -139,7 +139,7 @@ sudo ./test_robot
 
 ---
 
-## ✅ Project Highlights
+## 8. Project Highlights
 
 - Fully modular and object-oriented design
 - Non-blocking, thread-safe real-time task scheduling
@@ -149,7 +149,7 @@ sudo ./test_robot
 
 ---
 
-## 📷 Screenshots / Demo
+## 9. Screenshots / Demo
 
 [(https://t.bilibili.com/1058982800262168584?share_source=pc_native
 https://youtu.be/4GdFb-aglIA)]
@@ -158,7 +158,7 @@ https://youtu.be/4GdFb-aglIA)]
 
 ---
 
-## 👨‍💻 Team Members
+## 10. Team Members
 
 - Ye He (2966900H)
 - Yuan Zhao (3026815Z)
