@@ -1,6 +1,6 @@
 #ifndef CONTROLPANEL_H
 #define CONTROLPANEL_H
-
+#include <opencv2/core.hpp>
 #include <QWidget>
 #include <QPushButton>
 #include <QLabel>
