@@ -8,7 +8,7 @@ This project is developed based on the Raspberry Pi 5 and fully implemented in C
 
 ## 2. Project Folder Overview
 
-### 🔄 UPDATE
+###  UPDATE
 
 Contains version transition documentation. Each file outlines the changes made between specific software versions, providing a clear development history.
 
@@ -18,7 +18,7 @@ Contains version transition documentation. Each file outlines the changes made b
 - `VERSION2 TO VERSION3.txt`
 - `VERSION3 TO VERSION4.txt`
 
-### 📄 docs
+###  docs
 
 This folder includes essential system documentation.
 
@@ -30,7 +30,7 @@ This folder includes essential system documentation.
 - `background.docx`:Background of this project.
 - `Project Revision Meeting Minutes.docx`: Meeting minutes.
 
-### 🎞 media
+###  media
 
 Stores multimedia assets demonstrating the system.
 
@@ -38,7 +38,7 @@ Stores multimedia assets demonstrating the system.
 - `demo.mp4`: Project demonstration video.
 - `demostration video link.txt`: Link to an online version of the demonstration.
 
-### 🧠 src
+###  src
 
 The source code directory. It contains both development history and the final implementation.
 
@@ -86,7 +86,7 @@ Install dependencies on Raspberry Pi:
 
 ## 5. Build & Run
 
-### 🔧 Dependency Installation (Run Once)
+###  Dependency Installation (Run Once)
 
 ```bash
 sudo apt update
@@ -96,23 +96,23 @@ sudo apt install -y qtbase5-dev qt5-qmake qttools5-dev-tools libopencv-dev libgp
 
 ---
 
-### 🔧 Build the Project
+###  Build the Project
 
 ```bash
 make clean
 make         # Build the Qt GUI application (robot_gui)
 make test    # Build the command-line testing tool (test_robot)
 ```
-### 🚀 Run the Application
+###  Run the Application
 
-#### 🚧 If using SSH (no desktop):
+####  If using SSH (no desktop):
 
 ```bash
 export QT_QPA_PLATFORM=offscreen
 ./robot_gui
 ```
 
-#### 🧪 Run the test robot program:
+####  Run the test robot program:
 
 ```bash
 sudo ./test_robot
