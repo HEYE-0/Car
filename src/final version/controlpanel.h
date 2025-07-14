@@ -1,11 +1,14 @@
 #ifndef CONTROLPANEL_H
 #define CONTROLPANEL_H
-#include <opencv2/core.hpp>
+
 #include <QWidget>
 #include <QPushButton>
 #include <QLabel>
 #include <QSlider>
+#include <opencv2/core.hpp>
 #include "robot.h"
+#include "ultrasonic.h"
+#include "camera.h"
 
 enum class RobotState {
     READY,
@@ -50,4 +53,4 @@ private:
     QLabel *statusLabel;
 };
 
-#endif // CONTROLPANEL_H
+#endif
