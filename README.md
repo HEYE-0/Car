@@ -108,7 +108,7 @@ Install dependencies on Raspberry Pi:
 This section provides a detailed description of the hardware wiring configuration between the Raspberry Pi 5, the motor driver modules (L298N), and the ultrasonic sensors (HC-SR04). The system utilizes two L298N motor drivers to independently control the four-wheel drive motors, while three ultrasonic sensors are used for real-time obstacle detection. Each module is connected to the Raspberry Pi's GPIO pins through designated physical pin mappings to ensure stable control and data acquisition. The wiring tables below outline the specific GPIO assignments for all modules.
 
 
-## 5. Build & Run
+## 6. Build & Run
 
 ###  Dependency Installation (Run Once)
 
@@ -143,7 +143,7 @@ sudo ./test_robot
 ```
 ---
 
-## 6. Real-Time Scheduling Design
+## 7. Real-Time Scheduling Design
 
 - All real-time tasks (camera capture and ultrasonic measurement) are registered in `TaskScheduler` and executed on separate threads.
 - Each task runs on a fixed interval (e.g., camera every 50ms, ultrasonic every 300ms).
@@ -152,7 +152,7 @@ sudo ./test_robot
 
 ---
 
-## 7. GUI Features
+## 8. GUI Features
 
 - **Directional control buttons**: Forward, Backward, Left, Right
 - **Speed control slider**: Adjusts motor PWM output (0–1023)
@@ -163,7 +163,7 @@ sudo ./test_robot
 
 ---
 
-## 8. Project Highlights
+## 9. Project Highlights
 
 - Fully modular and object-oriented design
 - Non-blocking, thread-safe real-time task scheduling
@@ -173,7 +173,7 @@ sudo ./test_robot
 
 ---
 
-## 9. Screenshots / Demo
+## 10. Screenshots / Demo
 
 [(https://t.bilibili.com/1058982800262168584?share_source=pc_native
 https://youtu.be/4GdFb-aglIA)]
@@ -182,7 +182,7 @@ https://youtu.be/4GdFb-aglIA)]
 
 ---
 
-## 10. Team Members
+## 11. Team Members
 
 - Ye He (2966900H)
 - Yuan Zhao (3026815Z)
