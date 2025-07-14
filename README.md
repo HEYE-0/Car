@@ -74,8 +74,9 @@ Raspberry Pi 5
 
 
 3 HC-SR04 ultrasonic sensors
-<img width="389" height="392" alt="截屏2025-07-14 11 04 13" src="https://github.com/user-attachments/assets/21546774-a35f-4c3c-a9a2-7834d84aa232" />
 
+
+<img width="389" height="392" alt="截屏2025-07-14 11 04 13" src="https://github.com/user-attachments/assets/21546774-a35f-4c3c-a9a2-7834d84aa232" />
 
 
 Kamera V2 (8MP, 1080p) camera module
