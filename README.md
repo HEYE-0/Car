@@ -92,7 +92,6 @@ Mechanical Structure of the Car
 
 - Qt 5 (`qtbase5-dev`)
 - OpenCV 4 (`libopencv-dev`)
-- wiringPi (or any compatible GPIO control library)
 - libgpiod (for edge-based GPIO control)
 - C++11 or later
 
