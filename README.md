@@ -53,13 +53,12 @@ The source code directory. It contains both development history and the final im
 |--------|-------------|
 | `main.cpp` | Entry point of the Qt application |
 | `controlpanel.cpp/h` | GUI panel providing control buttons and data display |
-| `scheduler.cpp/h` | Real-time task scheduler supporting multiple periodic callbacks |
 | `robot.cpp/h` | Robot control logic integrating motor and sensor functions |
 | `motor.cpp/h` | Motor control module with PWM speed adjustment |
 | `ultrasonic.cpp/h` | Ultrasonic distance measurement module using `chrono` for precision |
 | `camera.cpp/h` | Camera capture module using OpenCV |
 | `test_robot.cpp` | Console testing utility for motor and sensor validation |
-| `Makefile` | Build configuration for all components |
+| `CMakeList` | Build configuration for all components |
 
 ---
 
