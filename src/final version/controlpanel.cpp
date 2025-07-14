@@ -1,12 +1,12 @@
-// Updated controlpanel.cpp with working scheduler and statusLabel
 #include "controlpanel.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDebug>
-#include <chrono>
 
-ControlPanel::ControlPanel(QWidget *parent) : QWidget(parent), robot(new Robot()) {
+ControlPanel::ControlPanel(QWidget *parent) : QWidget(parent), robot(new Robot()), currentState(RobotState::READY) {
     setupUI();
+    robot->getUltrasonic()->registerCallback(this);
+    robot->getCamera()->registerCallback(this);
 }
 
 ControlPanel::~ControlPanel() {
@@ -52,71 +52,59 @@ void ControlPanel::setupUI() {
 }
 
 void ControlPanel::onStartClicked() {
-    scheduler.addTask("ultrasonic", 300, [this]() {
-        auto start = std::chrono::steady_clock::now();
-        this->updateUltrasonic();
-        auto end = std::chrono::steady_clock::now();
-        qDebug() << "[Delay] Ultrasonic took "
-                 << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms";
-    });
-
-    scheduler.addTask("camera", 50, [this]() {
-        auto start = std::chrono::steady_clock::now();
-        this->updateCamera();
-        auto end = std::chrono::steady_clock::now();
-        qDebug() << "[Delay] Camera took "
-                 << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms";
-    });
-
-    scheduler.start();
+    currentState = RobotState::RUNNING;
     statusLabel->setText("Status: Running");
 }
 
 void ControlPanel::onStopClicked() {
-    scheduler.stop();
+    currentState = RobotState::STOPPED;
     robot->stopAll();
     statusLabel->setText("Status: Stopped");
 }
 
 void ControlPanel::onForwardClicked() {
-    int currentSpeed = speedSlider->value();
-    if (robot) robot->moveForward(currentSpeed);
+    currentState = RobotState::RUNNING;
+    int speed = speedSlider->value();
+    robot->moveForward(speed);
     statusLabel->setText("Status: Forward");
 }
 
 void ControlPanel::onBackwardClicked() {
-    int currentSpeed = speedSlider->value();
-    if (robot) {
-        robot->turnLeft(currentSpeed);
-        robot->turnLeft(currentSpeed);
-    }
+    currentState = RobotState::RUNNING;
+    int speed = speedSlider->value();
+    robot->turnLeft(speed);
+    robot->turnLeft(speed);
     statusLabel->setText("Status: Backward");
 }
 
 void ControlPanel::onLeftClicked() {
-    int currentSpeed = speedSlider->value();
-    if (robot) robot->turnLeft(currentSpeed);
+    currentState = RobotState::RUNNING;
+    int speed = speedSlider->value();
+    robot->turnLeft(speed);
     statusLabel->setText("Status: Left");
 }
 
 void ControlPanel::onRightClicked() {
-    int currentSpeed = speedSlider->value();
-    if (robot) robot->turnRight(currentSpeed);
+    currentState = RobotState::RUNNING;
+    int speed = speedSlider->value();
+    robot->turnRight(speed);
     statusLabel->setText("Status: Right");
 }
 
 void ControlPanel::onHaltClicked() {
-    if (robot) robot->stopAll();
+    currentState = RobotState::STOPPED;
+    robot->stopAll();
     statusLabel->setText("Status: Halt");
 }
 
-void ControlPanel::updateUltrasonic() {
-    for (int i = 0; i < 3; ++i) {
-        float dist = robot->getSensorDistance(i);
-        qDebug() << "Sensor" << i << ":" << dist << "cm";
-    }
+void ControlPanel::onTooClose(float distance, int sensorId) {
+    currentState = RobotState::OBSTACLE_AVOID;
+    robot->stopAll();
+    statusLabel->setText(QString("Obstacle %1cm on sensor %2").arg(distance).arg(sensorId));
 }
 
-void ControlPanel::updateCamera() {
-    qDebug() << "Camera updated.";
+void ControlPanel::onMarkerDetected(int markerId, cv::Point2f pos) {
+    currentState = RobotState::FOLLOWING;
+    robot->followMarker(markerId, pos);
+    statusLabel->setText(QString("Following marker %1").arg(markerId));
 }

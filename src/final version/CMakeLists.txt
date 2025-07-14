@@ -1,30 +1,54 @@
-# Updated Makefile with moc support for Qt class
-CXX = g++
-CXXFLAGS = -Wall -std=c++17
+cmake_minimum_required(VERSION 3.10)
+project(SmartCar)
 
-QTFLAGS = `pkg-config --cflags Qt5Widgets Qt5Gui Qt5Core`
-QTLIBS  = `pkg-config --libs Qt5Widgets Qt5Gui Qt5Core`
+set(CMAKE_CXX_STANDARD 17)
 
-OPENCVFLAGS = `pkg-config --cflags opencv4`
-OPENCVLIBS  = `pkg-config --libs opencv4`
+# --------------------------------------------------
+# Find required packages
+# --------------------------------------------------
+find_package(OpenCV REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBGPIOD REQUIRED libgpiod)
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
-LIBS = -lgpiod -lpthread
+# --------------------------------------------------
+# Include directories
+# --------------------------------------------------
+include_directories(
+    ${OpenCV_INCLUDE_DIRS}
+    ${LIBGPIOD_INCLUDE_DIRS}
+)
 
-SRC = main.cpp controlpanel.cpp camera.cpp robot.cpp motor.cpp ultrasonic.cpp scheduler.cpp moc_controlpanel.cpp
-OBJ = $(SRC:.cpp=.o)
+# --------------------------------------------------
+# Source files
+# --------------------------------------------------
+set(SOURCES
+    main.cpp
+    controlpanel.cpp
+    robot.cpp
+    motor.cpp
+    ultrasonic.cpp
+    camera.cpp
+)
 
-TARGET = robot_gui
+set(HEADERS
+    controlpanel.h
+    robot.h
+    motor.h
+    ultrasonic.h
+    camera.h
+)
 
-default: $(TARGET)
+# --------------------------------------------------
+# Create executable
+# --------------------------------------------------
+add_executable(smartcar ${SOURCES} ${HEADERS})
 
-$(TARGET): $(OBJ)
-	$(CXX) -o $@ $^ $(QTLIBS) $(OPENCVLIBS) $(LIBS)
-
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(QTFLAGS) $(OPENCVFLAGS) -c $< -o $@
-
-moc_controlpanel.cpp: controlpanel.h
-	moc controlpanel.h -o moc_controlpanel.cpp
-
-clean:
-	rm -f *.o *.cpp~ $(TARGET) moc_controlpanel.cpp
+# --------------------------------------------------
+# Link libraries
+# --------------------------------------------------
+target_link_libraries(smartcar
+    ${OpenCV_LIBS}
+    ${LIBGPIOD_LIBRARIES}
+    Qt5::Widgets
+)

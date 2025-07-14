@@ -1,4 +1,3 @@
-// Updated controlpanel.h with Q_OBJECT macro
 #ifndef CONTROLPANEL_H
 #define CONTROLPANEL_H
 
@@ -7,13 +6,23 @@
 #include <QLabel>
 #include <QSlider>
 #include "robot.h"
-#include "scheduler.h"
 
-class ControlPanel : public QWidget {
+enum class RobotState {
+    READY,
+    RUNNING,
+    FOLLOWING,
+    OBSTACLE_AVOID,
+    STOPPED
+};
+
+class ControlPanel : public QWidget, public DistanceEventInterface, public CameraEventInterface {
     Q_OBJECT
 public:
     explicit ControlPanel(QWidget *parent = nullptr);
     ~ControlPanel();
+
+    void onTooClose(float distance, int sensorId) override;
+    void onMarkerDetected(int markerId, cv::Point2f pos) override;
 
 private slots:
     void onStartClicked();
@@ -26,11 +35,9 @@ private slots:
 
 private:
     void setupUI();
-    void updateUltrasonic();
-    void updateCamera();
 
     Robot *robot;
-    TaskScheduler scheduler;
+    RobotState currentState;
 
     QPushButton *startButton;
     QPushButton *stopButton;
