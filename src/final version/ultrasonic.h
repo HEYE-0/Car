@@ -6,10 +6,13 @@
 #include <mutex>
 #include <condition_variable>
 #include <chrono>
+#include <string>
 
+// Interface for receiving distance events
 class DistanceEventInterface {
 public:
     virtual void onTooClose(float distance, int id) = 0;
+    virtual ~DistanceEventInterface() = default;
 };
 
 class Ultrasonic {
@@ -32,9 +35,9 @@ private:
         WAIT_FOR_FALLING
     };
 
-    struct gpiod_chip* _chip;
-    struct gpiod_line* _trig;
-    struct gpiod_line* _echo;
+    gpiod_chip* _chip;
+    gpiod_line* _trig;
+    gpiod_line* _echo;
 
     std::string _chipname;
     int _trigLine;
@@ -52,4 +55,4 @@ private:
     std::chrono::steady_clock::time_point _echoStart;
 };
 
-#endif
+#endif // ULTRASONIC_H
