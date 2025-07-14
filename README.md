@@ -118,6 +118,46 @@ This section provides a detailed description of the hardware wiring configuratio
 | Motor Power Input                    | VCC       | External Battery + | —     |
 | Ground (Common)                      | GND       | GND         | Pin 6 / 14 etc|
 
+### L298N B Module Wiring
+| Function                              | L298N Pin | GPIO (BCM) | Physical Pin |
+|---------------------------------------|-----------|------------|---------------|
+| Left Rear Wheel Direction Control 1   | IN1       | GPIO5      | Pin 29        |
+| Left Rear Wheel Direction Control 2   | IN2       | GPIO6      | Pin 31        |
+| Right Rear Wheel Direction Control 1  | IN3       | GPIO19 (PWM)| Pin 35       |
+| Right Rear Wheel Direction Control 2  | IN4       | GPIO26     | Pin 37        |
+| Left Rear Wheel PWM (Speed Control)   | ENA       | GPIO20 (PWM)| Pin 38       |
+| Right Rear Wheel PWM (Speed Control)  | ENB       | GPIO21 (PWM)| Pin 40       |
+| Motor Power Input                     | VCC       | External Battery + | —     |
+| Ground (Common)                       | GND       | GND         | Pin 6 / 14 etc|
+
+### Front Ultrasonic Sensor Wiring
+| Function | HC-SR04 Pin | GPIO (BCM) | Physical Pin     |
+|----------|-------------|------------|------------------|
+| TRIG     | TRIG        | GPIO20     | Pin 8            |
+| ECHO     | ECHO        | GPIO21     | Pin 10 *(Voltage Divider)* |
+| Power    | VCC         | 5V         | Pin 2 / 4        |
+| Ground   | GND         | GND        | Pin 6 / 14 / 39  |
+
+### Left Ultrasonic Sensor Wiring
+| Function | HC-SR04 Pin | GPIO (BCM) | Physical Pin     |
+|----------|-------------|------------|------------------|
+| TRIG     | TRIG        | GPIO23     | Pin 16           |
+| ECHO     | ECHO        | GPIO24     | Pin 18 *(Voltage Divider)* |
+| Power    | VCC         | 5V         | Pin 2 / 4        |
+| Ground   | GND         | GND        | Pin 6 / 14 / 39  |
+
+### Right Ultrasonic Sensor Wiring
+| Function | HC-SR04 Pin | GPIO (BCM) | Physical Pin     |
+|----------|-------------|------------|------------------|
+| TRIG     | TRIG        | GPIO25     | Pin 22           |
+| ECHO     | ECHO        | GPIO26     | Pin 36 *(Voltage Divider)* |
+| Power    | VCC         | 5V         | Pin 2 / 4        |
+| Ground   | GND         | GND        | Pin 6 / 14 / 39  |
+
+### Raspberry Pi 5 GPIO Pinout Diagram
+The following diagram illustrates the Raspberry Pi 5 GPIO header layout, showing both the physical pin numbers (1–40) and the corresponding BCM GPIO numbers. This diagram serves as a reference for understanding the pin assignments used in the wiring tables below.
+<img width="864" height="459" alt="image" src="https://github.com/user-attachments/assets/ac9bf033-7651-45ca-bcf2-648aa8b58441" />
+
 
 ## 6. Build & Run
 
