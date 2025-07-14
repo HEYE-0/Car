@@ -106,6 +106,16 @@ Install dependencies on Raspberry Pi:
 
 ## 5. System architecture
 This section provides a detailed description of the hardware wiring configuration between the Raspberry Pi 5, the motor driver modules (L298N), and the ultrasonic sensors (HC-SR04). The system utilizes two L298N motor drivers to independently control the four-wheel drive motors, while three ultrasonic sensors are used for real-time obstacle detection. Each module is connected to the Raspberry Pi's GPIO pins through designated physical pin mappings to ensure stable control and data acquisition. The wiring tables below outline the specific GPIO assignments for all modules.
+### L298N A Module Wiring
+Function	L298N A Pin	Raspberry Pi GPIO (BCM)	Raspberry Pi Physical Pin
+Left Front Wheel Direction Control 1	IN1	GPIO17	Pin 11
+Left Front Wheel Direction Control 2	IN2	GPIO18	Pin 12
+Right Front Wheel Direction Control 1	IN3	GPIO27	Pin 13
+Right Front Wheel Direction Control 2	IN4	GPIO22	Pin 15
+Left Front Wheel PWM (Speed Control)	ENA	GPIO12 (PWM)	Pin 32
+Right Front Wheel PWM (Speed Control)	ENB	GPIO13 (PWM)	Pin 33
+Motor Power Input	VCC	External Battery Positive	—
+Motor Power Ground	GND	Raspberry Pi GND (Common Ground)	Pin 6 / 14 etc
 
 
 ## 6. Build & Run
