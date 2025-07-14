@@ -1,12 +1,12 @@
 # Obstacle Avoidance Robot Project (Qt + C++)
 
-1. Project Overview
+## 1.Project Overview
 
 This project is developed based on the Raspberry Pi 5 and fully implemented in C++. It builds an autonomous obstacle avoidance robot system. A Qt graphical interface enables real-time control of the robot’s movement, motor speed adjustment, ultrasonic distance monitoring, and camera feed display. The architecture is modular and features a custom multithreaded real-time scheduler (TaskScheduler) to replace traditional polling, achieving soft real-time control.
 
 ---
 
-2. Project Folder Overview
+## 2.Project Folder Overview
 
 ### 🔄 UPDATE
 
