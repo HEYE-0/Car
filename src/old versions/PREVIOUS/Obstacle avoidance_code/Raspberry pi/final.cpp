@@ -67,7 +67,6 @@ void followAruco() {
 
     char last_cmd = 'q';
     const int tolerance = 10;
-    const int delay_ms = 200;
 
     unique_lock<mutex> lock(mode_mutex);
 

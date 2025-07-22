@@ -116,7 +116,6 @@ int main() {
             brake();
         }
 
-        delay(50);  // Delay for 50ms to avoid CPU overload
     }
 
     return 0;

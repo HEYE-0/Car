@@ -80,9 +80,7 @@ void turnRight() {
 // === Ultrasonic Distance Measurement Function (in cm) ===
 float getDistance(int trigPin, int echoPin) {
   digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
   digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
 
   long duration = pulseIn(echoPin, HIGH, 25000); // Timeout at 25ms

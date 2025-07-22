@@ -92,9 +92,9 @@ void handleManual(char cmd) {
 
 void handleFollow() {
   switch (follow_cmd) {
-    case 'w': moveForward(); delay(50); stopMotors(); break;
-    case 'a': turnLeft(); delay(50); stopMotors(); break;
-    case 'd': turnRight(); delay(50); stopMotors(); break;
+    case 'w': moveForward();  stopMotors(); break;
+    case 'a': turnLeft();  stopMotors(); break;
+    case 'd': turnRight();  stopMotors(); break;
     case 'q': stopMotors(); break;
   }
 }
@@ -105,18 +105,18 @@ void handleAuto() {
   float right = getDistance(TRIG_RIGHT, ECHO_RIGHT);
 
   if (front > 0 && front < 20) {
-    stopMotors(); delay(200);
-    moveBackward(); delay(400);
-    turnRight(); delay(400);
+    stopMotors(); 
+    moveBackward(); 
+    turnRight(); 
   } else if (left > 0 && left < 15) {
-    turnRight(); delay(300);
+    turnRight(); 
   } else if (right > 0 && right < 15) {
-    turnLeft(); delay(300);
+    turnLeft(); 
   } else {
     moveForward();
   }
 
-  delay(100);
+  
 }
 
 void moveForward() {
@@ -156,8 +156,8 @@ void stopMotors() {
 
 // ========== Distance Measurement Function =========
 float getDistance(int trigPin, int echoPin) {
-  digitalWrite(trigPin, LOW); delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
+  digitalWrite(trigPin, LOW); 
+  digitalWrite(trigPin, HIGH); 
   digitalWrite(trigPin, LOW);
   long duration = pulseIn(echoPin, HIGH, 25000);
   if (duration == 0) return -1;
@@ -238,9 +238,9 @@ void handleManual(char cmd) {
 
 void handleFollow() {
   switch (follow_cmd) {
-    case 'w': moveForward(); delay(50); stopMotors(); break;
-    case 'a': turnLeft(); delay(50); stopMotors(); break;
-    case 'd': turnRight(); delay(50); stopMotors(); break;
+    case 'w': moveForward();  stopMotors(); break;
+    case 'a': turnLeft();  stopMotors(); break;
+    case 'd': turnRight();  stopMotors(); break;
     case 'q': stopMotors(); break;
   }
 }
@@ -251,18 +251,18 @@ void handleAuto() {
   float right = getDistance(TRIG_RIGHT, ECHO_RIGHT);
 
   if (front > 0 && front < 20) {
-    stopMotors(); delay(200);
-    moveBackward(); delay(400);
-    turnRight(); delay(400);
+    stopMotors(); 
+    moveBackward(); 
+    turnRight(); 
   } else if (left > 0 && left < 15) {
-    turnRight(); delay(300);
+    turnRight(); 
   } else if (right > 0 && right < 15) {
-    turnLeft(); delay(300);
+    turnLeft(); 
   } else {
     moveForward();
   }
 
-  delay(100);
+  
 }
 
 void moveForward() {
@@ -302,8 +302,8 @@ void stopMotors() {
 
 // ========== Distance - measuring function ==========
 float getDistance(int trigPin, int echoPin) {
-  digitalWrite(trigPin, LOW); delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
+  digitalWrite(trigPin, LOW); 
+  digitalWrite(trigPin, HIGH); 
   digitalWrite(trigPin, LOW);
   long duration = pulseIn(echoPin, HIGH, 25000);
   if (duration == 0) return -1;

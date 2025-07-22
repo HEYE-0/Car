@@ -51,7 +51,6 @@ void left() {
 // Control the car to turn
 void turn(int time) {
     left(); // Call the left turn function
-    delay(time * 200); // Control the turning angle by time
 }
 
 // Turn right
@@ -68,7 +67,6 @@ void back(int time) {
     softPwmWrite(1, 0);   // Turn off the left front motor
     softPwmWrite(6, 250); // Start the right rear motor
     softPwmWrite(5, 0);   // Turn off the right front motor
-    delay(time * 100); // Control the backward time
 }
 
 int main(int argc, char *argv[]) {

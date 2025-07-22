@@ -29,9 +29,7 @@ float disMeasure(void)
 
     // Send trigger signal
     digitalWrite(Trig, LOW);
-    delayMicroseconds(2);
     digitalWrite(Trig, HIGH);
-    delayMicroseconds(10);
     digitalWrite(Trig, LOW);
 
     // Wait for echo signal, maximum wait time of 5ms
