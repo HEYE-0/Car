@@ -100,7 +100,6 @@ Mechanical Structure of the Car
 - libgpiod (for edge-based GPIO control)
 - C++11 or later
 
-Install dependencies on Raspberry Pi:
 
 ---
 
