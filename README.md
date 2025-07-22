@@ -187,11 +187,6 @@ export QT_QPA_PLATFORM=offscreen
 ./smartcar
 ```
 
-####  Run the test robot program:
-
-```bash
-sudo ./test_robot
-```
 ---
 
 ## 7. Real-Time Execution Model
