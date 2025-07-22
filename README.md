@@ -2,7 +2,9 @@
 
 ## 1. Project Overview
 
-This project is developed based on the Raspberry Pi 5 and fully implemented in C++. It builds an autonomous obstacle avoidance robot system. A Qt graphical interface enables real-time control of the robot’s movement, motor speed adjustment, ultrasonic distance monitoring, and camera feed display. The architecture is modular and features a custom multithreaded real-time scheduler (TaskScheduler) to replace traditional polling, achieving soft real-time control.
+This project is developed on the Raspberry Pi 5 and fully implemented in C++. It builds an autonomous obstacle-avoidance robot system with modular architecture. A Qt-based graphical interface allows real-time control of the robot’s movement, motor speed adjustment, ultrasonic sensor feedback, and live camera feed display.
+
+The system is designed with a clean, event-driven architecture. A multithreaded control mechanism is used in combination with finite state machines to ensure responsive and organized behavior. This replaces earlier polling or delay-based logic and enables soft real-time responsiveness while maintaining code clarity and scalability.
 
 ---
 
