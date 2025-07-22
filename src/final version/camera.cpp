@@ -1,9 +1,8 @@
 #include "camera.h"
 #include <iostream>
-#include <opencv2/aruco.hpp>
 
 Camera::Camera() : callback(nullptr), running(true) {
-    cap.open(0); // Open default camera /dev/video0
+    cap.open(0); // open the camera
     if (!cap.isOpened()) {
         std::cerr << "[Camera] Failed to open camera device." << std::endl;
         running = false;
@@ -34,30 +33,8 @@ void Camera::processLoop() {
             continue;
         }
 
-        int detectedId = -1;
-        cv::Point2f position;
-        bool found = detectMarker(frame, detectedId, position);
-
-        if (found && callback) {
-            callback->onMarkerDetected(detectedId, position);
+        if (callback) {
+            callback->onFrameCaptured(frame);
         }
     }
-}
-
-bool Camera::detectMarker(cv::Mat& frame, int& id, cv::Point2f& pos) {
-
-    std::vector<int> ids;
-    std::vector<std::vector<cv::Point2f>> corners;
-
-    static cv::Ptr<cv::aruco::Dictionary> dictionary = 
-        cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
-
-    cv::aruco::detectMarkers(frame, dictionary, corners, ids);
-
-    if (!ids.empty()) {
-        id = ids[0];
-        pos = corners[0][0];  // top-left corner of first marker
-        return true;
-    }
-    return false;
 }
