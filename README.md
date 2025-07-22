@@ -163,7 +163,7 @@ The following diagram illustrates the Raspberry Pi 5 GPIO header layout, showing
 
 ```bash
 sudo apt update
-sudo apt install -y qtbase5-dev qt5-qmake qttools5-dev-tools \
+sudo apt install -y qtbase5-dev qttools5-dev-tools \
 libopencv-dev libgpiod-dev build-essential cmake pkg-config
 ```
 
@@ -227,8 +227,8 @@ This architecture replaces the previously used `TaskScheduler` and ensures modul
 
 ## 10. Screenshots / Demo
 
-[(https://t.bilibili.com/1058982800262168584?share_source=pc_native
-https://youtu.be/4GdFb-aglIA)]
+- [Bilibili demo](https://t.bilibili.com/1058982800262168584?share_source=pc_native)
+- [YouTube demo](https://youtu.be/4GdFb-aglIA)
 - Preview of the Qt control panel
 - Hardware wiring diagram (motors, sensors, camera)
 
