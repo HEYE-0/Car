@@ -221,12 +221,11 @@ This architecture replaces the previously used `TaskScheduler` and ensures modul
 
 ## 9. Project Highlights
 
-- Fully modular and object-oriented design
-- Non-blocking, thread-safe real-time task scheduling
-- High-precision ultrasonic measurement using `chrono`
-- Decoupled GUI and control logic via Qt + OpenCV
-- Entirely written in C++
-
+- **Fully Modular and Object-Oriented Design:** Each component (motor, sensor, GUI, logic) is implemented as an independent class.
+- **Non-Blocking, Event-Driven Real-Time Control:** Real-time responsiveness is achieved using multithreading and state machines without delay-based polling.
+- **High-Precision Ultrasonic Measurement:** Timing is handled via `std::chrono` for accurate edge-based distance sensing.
+- **Decoupled GUI and Control Logic:** The GUI (Qt) and backend logic (sensor and motion control) communicate cleanly through callback interfaces and signals.
+- **Entirely Written in C++:** All components are implemented in modern C++ (C++17), ensuring performance and portability.
 ---
 
 ## 10. Screenshots / Demo
