@@ -59,7 +59,7 @@ The source code directory. It contains both development history and the final im
 | `motor.cpp/h` | Motor control module with PWM speed adjustment |
 | `ultrasonic.cpp/h` | Ultrasonic distance measurement module using `chrono` for precision |
 | `camera.cpp/h` | Camera capture module using OpenCV |
-| `CMakeList.txt` | Build configuration for all components |
+| `CMakeLists.txt` | Build configuration for all components |
 
 ---
 
@@ -100,7 +100,6 @@ Mechanical Structure of the Car
 - libgpiod (for edge-based GPIO control)
 - C++11 or later
 
-Install dependencies on Raspberry Pi:
 
 ---
 
