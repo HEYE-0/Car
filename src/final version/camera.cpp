@@ -2,7 +2,7 @@
 #include <iostream>
 
 Camera::Camera() : callback(nullptr), running(true) {
-    cap.open(0); // open the camera
+    cap.open(0); // open default camera
     if (!cap.isOpened()) {
         std::cerr << "[Camera] Failed to open camera device." << std::endl;
         running = false;
