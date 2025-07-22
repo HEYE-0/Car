@@ -192,12 +192,19 @@ sudo ./test_robot
 ```
 ---
 
-## 7. Real-Time Scheduling Design
+## 7. Real-Time Execution Model
 
-- All real-time tasks (camera capture and ultrasonic measurement) are registered in `TaskScheduler` and executed on separate threads.
-- Each task runs on a fixed interval (e.g., camera every 50ms, ultrasonic every 300ms).
-- `std::condition_variable::wait_until()` is used to control wake-up timing and avoid polling overhead.
-- Task execution durations are recorded via `std::chrono` for basic delay analysis.
+All time-sensitive modules (such as camera capture and ultrasonic sensing) are executed on independent threads using an event-driven structure.
+
+- **Multithreaded Design:** Each module (e.g., camera, ultrasonic) runs in its own dedicated thread to ensure responsiveness and concurrency.
+- **Event-Driven Architecture:** No polling or fixed delays are used. Instead, each component operates continuously and triggers callbacks when new data is available.
+- **Callback Interfaces:** 
+  - Ultrasonic modules notify the main controller via `onTooClose(distance, sensorId)`.
+  - The camera module sends live image frames using `onFrameCaptured(const cv::Mat& frame)`.
+- **Finite State Machines (FSM):** Robot behavior is governed using FSMs to manage transitions such as READY → RUNNING → STOPPED based on input conditions.
+- **Performance Monitoring:** Key task durations can be optionally measured using `std::chrono` to monitor and debug real-time responsiveness.
+
+This architecture replaces the previously used `TaskScheduler` and ensures modular, maintainable, and soft real-time control without relying on artificial timing delays.
 
 ---
 
