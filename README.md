@@ -95,11 +95,10 @@ Mechanical Structure of the Car
 
 **Software:**
 
-- Qt 5 (`qtbase5-dev`)
-- OpenCV 4 (`libopencv-dev`)
-- libgpiod (for edge-based GPIO control)
-- C++11 or later
-
+- Qt 5 (qtbase5-dev, qt5-default): for GUI development and event loop integration
+- OpenCV 4.x (libopencv-dev): for camera access and image processing (basic modules only)
+- libgpiod (libgpiod-dev): for GPIO-based interrupt-driven ultrasonic sensing
+- C++17 (recommended): ensures compatibility with modern threading and standard library features
 
 ---
 
