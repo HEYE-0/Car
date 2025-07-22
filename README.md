@@ -163,7 +163,8 @@ The following diagram illustrates the Raspberry Pi 5 GPIO header layout, showing
 
 ```bash
 sudo apt update
-sudo apt install -y qtbase5-dev qt5-qmake qttools5-dev-tools libopencv-dev libgpiod-dev build-essential pkg-config
+sudo apt install -y qtbase5-dev qt5-qmake qttools5-dev-tools \
+libopencv-dev libgpiod-dev build-essential cmake pkg-config
 ```
 
 
@@ -172,9 +173,10 @@ sudo apt install -y qtbase5-dev qt5-qmake qttools5-dev-tools libopencv-dev libgp
 ###  Build the Project
 
 ```bash
-make clean
-make         # Build the Qt GUI application (robot_gui)
-make test    # Build the command-line testing tool (test_robot)
+mkdir -p build
+cd build
+cmake ..
+make        # Build the Qt GUI application (smartcar)
 ```
 ###  Run the Application
 
@@ -182,7 +184,7 @@ make test    # Build the command-line testing tool (test_robot)
 
 ```bash
 export QT_QPA_PLATFORM=offscreen
-./robot_gui
+./smartcar
 ```
 
 ####  Run the test robot program:
