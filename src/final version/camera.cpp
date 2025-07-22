@@ -1,7 +1,6 @@
 #include "camera.h"
 #include <iostream>
-#include <thread>
-#include <chrono>
+#include <opencv2/aruco.hpp>
 
 Camera::Camera() : callback(nullptr), running(true) {
     cap.open(0); // Open default camera /dev/video0
@@ -30,27 +29,35 @@ void Camera::registerCallback(CameraEventInterface* cb) {
 void Camera::processLoop() {
     cv::Mat frame;
     while (running) {
-        cap >> frame;
-        if (frame.empty()) continue;
+        if (!cap.read(frame)) {
+            std::cerr << "[Camera] Failed to read frame." << std::endl;
+            continue;
+        }
 
         int detectedId = -1;
         cv::Point2f position;
-        bool found = detectMarker(frame, detectedId, position); // detectMarker is a placeholder for actual detection
+        bool found = detectMarker(frame, detectedId, position);
 
         if (found && callback) {
             callback->onMarkerDetected(detectedId, position);
         }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
-bool Camera::detectMarker(cv::Mat &frame, int &id, cv::Point2f &pos) {
-    // Example placeholder implementation; replace with actual ArUco detection
-    // e.g. using cv::aruco::detectMarkers, etc.
-    // if detected:
-    //    id = detectedId;
-    //    pos = detectedPosition;
-    //    return true;
+bool Camera::detectMarker(cv::Mat& frame, int& id, cv::Point2f& pos) {
+    // Example using OpenCV's ArUco detector
+    std::vector<int> ids;
+    std::vector<std::vector<cv::Point2f>> corners;
+
+    static cv::Ptr<cv::aruco::Dictionary> dictionary = 
+        cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+
+    cv::aruco::detectMarkers(frame, dictionary, corners, ids);
+
+    if (!ids.empty()) {
+        id = ids[0];
+        pos = corners[0][0];  // top-left corner of first marker
+        return true;
+    }
     return false;
 }
