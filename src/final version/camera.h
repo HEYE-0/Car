@@ -1,14 +1,13 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <opencv2/core.hpp>
-#include <opencv2/videoio.hpp>
+#include <opencv2/opencv.hpp>
 #include <thread>
 
-// Interface for receiving camera marker detection events
+
 class CameraEventInterface {
 public:
-    virtual void onMarkerDetected(int id, cv::Point2f pos) = 0;
+    virtual void onFrameCaptured(const cv::Mat& frame) = 0;
     virtual ~CameraEventInterface() = default;
 };
 
@@ -21,7 +20,6 @@ public:
 
 private:
     void processLoop();
-    bool detectMarker(cv::Mat &frame, int &id, cv::Point2f &pos);
 
     cv::VideoCapture cap;
     CameraEventInterface* callback;
@@ -29,4 +27,4 @@ private:
     bool running;
 };
 
-#endif
+#endif // CAMERA_H
