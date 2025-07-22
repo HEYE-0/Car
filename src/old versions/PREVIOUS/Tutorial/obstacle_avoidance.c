@@ -76,7 +76,6 @@ int main() {
             cout << "Move forward" << endl;
         }
 
-        this_thread::sleep_for(100ms);
     }
 
     gpiod_chip_close(chip);

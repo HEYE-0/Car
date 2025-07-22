@@ -79,7 +79,6 @@ int main() {
     signal(SIGINT, handleSignal); // 捕获 Ctrl+C
 
     if (!setupSerial()) return 1;
-    this_thread::sleep_for(chrono::seconds(2)); // 等待 Arduino 启动
 
     sendCommand('p'); // 初始自动模式
     cout << "🚗 自动避障模式已启动 (按 m 切换手动)\n";
@@ -107,7 +106,6 @@ int main() {
                 break;
         }
     }
-        this_thread::sleep_for(chrono::milliseconds(50));
     }
 
     reader.join();

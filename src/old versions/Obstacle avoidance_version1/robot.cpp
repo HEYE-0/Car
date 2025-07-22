@@ -47,22 +47,19 @@ void Robot::stopAll() {
 
 void Robot::onTooClose(float distance, int sensorId) {
     stopAll();
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    
 
     if (sensorId == 0) { // Front
         float leftDist = sensors[1]->getDistance();
         float rightDist = sensors[2]->getDistance();
         if (leftDist > rightDist) turnLeft();
         else turnRight();
-        std::this_thread::sleep_for(std::chrono::milliseconds(400));
         moveForward();
     } else if (sensorId == 1) {
         turnRight();
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
         moveForward();
     } else if (sensorId == 2) {
         turnLeft();
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
         moveForward();
     }
 }

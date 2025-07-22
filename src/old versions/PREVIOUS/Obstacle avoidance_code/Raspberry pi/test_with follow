@@ -75,7 +75,6 @@ void followAruco() {
 
     while (running) {
         if (mode != 'f') {
-            this_thread::sleep_for(chrono::milliseconds(200));
             continue;
         }
 
@@ -131,7 +130,6 @@ void followAruco() {
         imshow("Tracking View", frame);
         if (waitKey(1) == 27) break;
 
-        this_thread::sleep_for(chrono::milliseconds(50));
     }
 
     cap.release();
@@ -164,7 +162,6 @@ int main() {
     signal(SIGINT, handleSignal);
 
     if (!setupSerial()) return 1;
-    this_thread::sleep_for(chrono::seconds(2));
 
     sendCommand('p');
     cout << "🚗 默认进入自动模式 (p)，可切换 m=手动 f=跟随 ESC=退出\n";
@@ -207,7 +204,6 @@ int main() {
                     break;
             }
         }
-        this_thread::sleep_for(chrono::milliseconds(50));
     }
 
     reader.join();

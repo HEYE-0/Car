@@ -34,7 +34,6 @@ int main() {
             cout << "❌ No ArUco markers found\n";
         }
 
-        this_thread::sleep_for(chrono::seconds(3)); // Check every 3 seconds
     }
 
     return 0;

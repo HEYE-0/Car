@@ -164,7 +164,6 @@ int main() {
     signal(SIGINT, handleSignal);
 
     if (!setupSerial()) return 1;
-    this_thread::sleep_for(chrono::seconds(2));
 
     sendCommand('p');
     cout << "🚗 Default to automatic mode (p), can switch m=manual f=follow ESC=exit\n";

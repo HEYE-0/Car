@@ -79,7 +79,6 @@ int main() {
     signal(SIGINT, handleSignal); // Capture Ctrl+C
 
     if (!setupSerial()) return 1;
-    this_thread::sleep_for(chrono::seconds(2)); // Wait for Arduino to initialize
 
     sendCommand('p'); // Initial auto mode
     cout << "🚗 Auto obstacle avoidance mode started (press m to switch to manual)\n";
@@ -106,7 +105,6 @@ int main() {
                     break;
             }
         }
-        this_thread::sleep_for(chrono::milliseconds(50));
     }
 
     reader.join();

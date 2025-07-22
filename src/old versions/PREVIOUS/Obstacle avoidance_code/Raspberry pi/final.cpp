@@ -81,7 +81,6 @@ void followAruco() {
         Mat frame = imread("frame.jpg");
         if (frame.empty()) {
             cerr << "⚠️ Failed to load captured image.\n";
-            this_thread::sleep_for(chrono::milliseconds(delay_ms));
             continue;
         }
 
@@ -114,7 +113,6 @@ void followAruco() {
             last_cmd = cmd;
         }
 
-        this_thread::sleep_for(chrono::milliseconds(delay_ms));
     }
 }
 
@@ -144,7 +142,6 @@ int main() {
     signal(SIGINT, handleSignal);
     if (!setupSerial()) return 1;
 
-    this_thread::sleep_for(chrono::seconds(2));
     sendCommand('p');
     cout << "🚗 Default to automatic mode (p)，can switch m=manual f=follow ESC=exit\n";
 

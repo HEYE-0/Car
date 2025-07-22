@@ -5,7 +5,6 @@
 #include "robot.h"
 
 void delayMs(int ms) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 
 int main() {

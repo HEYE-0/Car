@@ -32,9 +32,7 @@ float Ultrasonic::getDistance() {
     using namespace std::chrono;
 
     gpiod_line_set_value(_trig, 0);
-    std::this_thread::sleep_for(microseconds(2));
     gpiod_line_set_value(_trig, 1);
-    std::this_thread::sleep_for(microseconds(10));
     gpiod_line_set_value(_trig, 0);
 
     gpiod_line_event event;
