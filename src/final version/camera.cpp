@@ -45,7 +45,7 @@ void Camera::processLoop() {
 }
 
 bool Camera::detectMarker(cv::Mat& frame, int& id, cv::Point2f& pos) {
-    // Example using OpenCV's ArUco detector
+
     std::vector<int> ids;
     std::vector<std::vector<cv::Point2f>> corners;
 
