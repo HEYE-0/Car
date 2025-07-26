@@ -25,7 +25,7 @@ public:
     ~ControlPanel();
 
     void onTooClose(float distance, int sensorId) override;
-    void onMarkerDetected(int markerId, cv::Point2f pos) override;
+    void onFrameCaptured(const cv::Mat& frame) override; 
 
 private slots:
     void onStartClicked();
@@ -53,4 +53,4 @@ private:
     QLabel *statusLabel;
 };
 
-#endif
+#endif // CONTROLPANEL_H
