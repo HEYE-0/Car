@@ -51,6 +51,7 @@ private:
     QPushButton *haltButton;
     QSlider *speedSlider;
     QLabel *statusLabel;
+    QLabel *cameraViewLabel; 
 };
 
-#endif // CONTROLPANEL_H
+#endif
