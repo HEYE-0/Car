@@ -2,6 +2,9 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDebug>
+#include <QImage>
+#include <QPixmap>
+#include <opencv2/imgproc.hpp>
 
 ControlPanel::ControlPanel(QWidget *parent)
     : QWidget(parent),
@@ -10,12 +13,10 @@ ControlPanel::ControlPanel(QWidget *parent)
 {
     setupUI();
 
-    // 注册超声波回调
     for (int i = 0; i < 3; ++i) {
         robot->getUltrasonic(i)->registerCallback(this);
     }
 
-    // 注册摄像头回调
     robot->getCamera()->registerCallback(this);
 }
 
@@ -33,6 +34,9 @@ void ControlPanel::setupUI() {
     haltButton = new QPushButton("Halt", this);
     speedSlider = new QSlider(Qt::Horizontal, this);
     statusLabel = new QLabel("Ready", this);
+    cameraViewLabel = new QLabel(this);
+    cameraViewLabel->setFixedSize(320, 240);
+    cameraViewLabel->setStyleSheet("background-color: black;");
 
     // 布局
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -49,10 +53,10 @@ void ControlPanel::setupUI() {
     mainLayout->addLayout(controlLayout);
     mainLayout->addWidget(speedSlider);
     mainLayout->addWidget(statusLabel);
+    mainLayout->addWidget(cameraViewLabel); 
 
     setLayout(mainLayout);
 
-    // 连接信号槽
     connect(startButton, &QPushButton::clicked, this, &ControlPanel::onStartClicked);
     connect(stopButton, &QPushButton::clicked, this, &ControlPanel::onStopClicked);
     connect(forwardButton, &QPushButton::clicked, this, &ControlPanel::onForwardClicked);
@@ -79,7 +83,6 @@ void ControlPanel::onForwardClicked() {
 }
 
 void ControlPanel::onBackwardClicked() {
-    // 可以自行实现 backward 方法
     robot->stopAll();
     statusLabel->setText("Stopped for Backward Placeholder");
 }
@@ -105,7 +108,10 @@ void ControlPanel::onTooClose(float distance, int sensorId) {
     statusLabel->setText("Obstacle Detected!");
 }
 
-void ControlPanel::onMarkerDetected(int markerId, cv::Point2f pos) {
-    qDebug() << "Marker detected:" << markerId << "at position:" << pos.x << "," << pos.y;
-    statusLabel->setText("Marker Found!");
+void ControlPanel::onFrameCaptured(const cv::Mat& frame) {
+    if (frame.empty()) return;
+    cv::Mat rgb;
+    cv::cvtColor(frame, rgb, cv::COLOR_BGR2RGB);
+    QImage img((const uchar*)rgb.data, rgb.cols, rgb.rows, rgb.step, QImage::Format_RGB888);
+    cameraViewLabel->setPixmap(QPixmap::fromImage(img).scaled(cameraViewLabel->size(), Qt::KeepAspectRatio));
 }
