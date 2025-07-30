@@ -29,10 +29,15 @@ This folder includes essential system documentation.
 
 #### Files:
 `Structural description.txt`: Overview of the system’s structure.
+
 `Hardware_Specifications.pdf`: Technical details about the hardware components.
+
 `System architecture.pdf`: Explanation of the overall system design.
+
 `Team Roles.md`: Division of team work.
+
 `background.docx`:Background of this project.
+
 `Project Revision Meeting Minutes.docx`: Meeting minutes.
 
 ###  media
@@ -40,16 +45,18 @@ This folder includes essential system documentation.
 Stores multimedia assets demonstrating the system.
 
 #### Files:
-- `demo.mp4`: Project demonstration video.
-- `demostration video link.txt`: Link to an online version of the demonstration.
+ `demo.mp4`: Project demonstration video.
+ 
+`demostration video link.txt`: Link to an online version of the demonstration.
 
 ###  src
 
 The source code directory. It contains both development history and the final implementation.
 
 #### Subfolders:
-- `old versions/`: Legacy code for reference.
-- `final version/`: Stable, up-to-date implementation.
+`old versions/`: Legacy code for reference.
+
+`final version/`: Stable, up-to-date implementation.
 
 ---
 ## 3. Project Structure
