@@ -16,9 +16,9 @@ Contains version transition documentation. Each file outlines the changes made b
 
 #### Files:
 `PREVIOUS TO VERSION1.txt`
- `VERSION1 TO VERSION2.txt`
- `VERSION2 TO VERSION3.txt`
- `VERSION3 TO VERSION4.txt`
+`VERSION1 TO VERSION2.txt`
+`VERSION2 TO VERSION3.txt`
+`VERSION3 TO VERSION4.txt`
 
 ###  docs
 
