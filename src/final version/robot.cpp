@@ -5,12 +5,10 @@ Robot::Robot()
       rightMotor(19, 26, 13),
       camera()
 {
-    // 初始化三个超声波传感器
     sensors.push_back(new Ultrasonic("gpiochip0", 23, 24, 0)); // front
     sensors.push_back(new Ultrasonic("gpiochip0", 17, 27, 1)); // left
     sensors.push_back(new Ultrasonic("gpiochip0", 5, 6, 2));   // right
 
-    // 启动超声波传感器的监控线程
     for (auto sensor : sensors) {
         sensor->start();
     }
