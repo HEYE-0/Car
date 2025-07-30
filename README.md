@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-This project is developed on the Raspberry Pi 5 and fully implemented in C++. It builds an autonomous obstacle-avoidance robot system with modular architecture. A Qt-based graphical interface allows real-time control of the robot’s movement, motor speed adjustment, ultrasonic sensor feedback, and live camera feed display.
+This project is developed on the Raspberry Pi 5 and fully implemented in C++. It builds an autonomous obstacle-avoidance robot system with a modular architecture. A Qt-based graphical interface allows real-time control of the robot’s movement, motor speed adjustment, ultrasonic sensor feedback, and live camera feed display.
 
 The system is designed with a clean, event-driven architecture. A multithreaded control mechanism is used in combination with finite state machines to ensure responsive and organized behavior. This replaces earlier polling or delay-based logic and enables soft real-time responsiveness while maintaining code clarity and scalability.
 
@@ -34,9 +34,9 @@ This folder includes essential system documentation.
 
 `System architecture.pdf`: Explanation of the overall system design.
 
-`Team Roles.md`: Division of team work.
+`Team Roles.md`: Division of teamwork.
 
-`background.docx`:Background of this project.
+`background.docx`: Background of this project.
 
 `Project Revision Meeting Minutes.docx`: Meeting minutes.
 
@@ -51,7 +51,7 @@ Stores multimedia assets demonstrating the system.
 
 ###  src
 
-The source code directory. It contains both development history and the final implementation.
+The source code directory. It contains both the development history and the final implementation.
 
 #### Subfolders:
 `old versions/`: Legacy code for reference.
