@@ -15,10 +15,10 @@ The system is designed with a clean, event-driven architecture. A multithreaded 
 Contains version transition documentation. Each file outlines the changes made between specific software versions, providing a clear development history.
 
 #### Files:
-- `PREVIOUS TO VERSION1.txt`
-- `VERSION1 TO VERSION2.txt`
-- `VERSION2 TO VERSION3.txt`
-- `VERSION3 TO VERSION4.txt`
+`PREVIOUS TO VERSION1.txt`
+ `VERSION1 TO VERSION2.txt`
+ `VERSION2 TO VERSION3.txt`
+ `VERSION3 TO VERSION4.txt`
 
 ###  docs
 
