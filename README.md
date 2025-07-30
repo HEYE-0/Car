@@ -28,12 +28,12 @@ Contains version transition documentation. Each file outlines the changes made b
 This folder includes essential system documentation.
 
 #### Files:
-- `Structural description.txt`: Overview of the system’s structure.
-- `Hardware_Specifications.pdf`: Technical details about the hardware components.
-- `System architecture.pdf`: Explanation of the overall system design.
-- `Team Roles.md`: Division of team work.
-- `background.docx`:Background of this project.
-- `Project Revision Meeting Minutes.docx`: Meeting minutes.
+`Structural description.txt`: Overview of the system’s structure.
+`Hardware_Specifications.pdf`: Technical details about the hardware components.
+`System architecture.pdf`: Explanation of the overall system design.
+`Team Roles.md`: Division of team work.
+`background.docx`:Background of this project.
+`Project Revision Meeting Minutes.docx`: Meeting minutes.
 
 ###  media
 
