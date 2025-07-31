@@ -82,7 +82,7 @@ The source code directory. It contains both the development history and the fina
 （2）4 DC motors + 2 L298N motor drivers
 
 
-
+![4 DC motors + 2 L298N motor drivers](media/photo/4 DC motors + 2 L298N motor drivers.png)
 
 
 
