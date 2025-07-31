@@ -164,7 +164,7 @@ This section provides a detailed description of the hardware wiring configuratio
 
 ### Raspberry Pi 5 GPIO Pinout Diagram
 The following diagram illustrates the Raspberry Pi 5 GPIO header layout, showing both the physical pin numbers (1–40) and the corresponding BCM GPIO numbers. This diagram serves as a reference for understanding the pin assignments used in the wiring tables below.
-<img width="864" height="459" alt="image" src="https://github.com/user-attachments/assets/ac9bf033-7651-45ca-bcf2-648aa8b58441" />
+<img src="media/photo/raspberry_pi5_gpio.png" alt="Raspberry Pi 5 GPIO Pinout Diagram" width="600">
 
 
 ## 6. Build & Run
