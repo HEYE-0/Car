@@ -95,7 +95,7 @@ The source code directory. It contains both the development history and the fina
 （4）Kamera V2 (8MP, 1080p) camera module
 
 
-<img width="389" height="392" alt="截屏2025-07-14 11 03 15" src="https://github.com/user-attachments/assets/250092e1-948c-4080-8cf8-a821446ae4cf" />
+<img src="media/photo/camera_module.png" alt="Kamera V2 Camera Module" width="300">
 
 
 Mechanical Structure of the Car
