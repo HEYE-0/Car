@@ -100,7 +100,7 @@ The source code directory. It contains both the development history and the fina
 
 Mechanical Structure of the Car
 
-<img width="389" height="392" alt="截屏2025-07-14 11 19 20" src="https://github.com/user-attachments/assets/4d7e9d7f-c4ef-4ef5-b786-c3cdcc69fd56" />
+<img src="media/photo/mechanical_structure.png" alt="Mechanical Structure of the Car" width="300">
 
 
 **Software:**
