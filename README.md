@@ -82,7 +82,7 @@ The source code directory. It contains both the development history and the fina
 （2）4 DC motors + 2 L298N motor drivers
 
 
-<img width="389" height="392" alt="截屏2025-07-14 11 05 58" src="https://github.com/user-attachments/assets/b3eb1580-111b-444c-98dc-e887f6472a42" />
+
 
 
 
