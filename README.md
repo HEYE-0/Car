@@ -89,7 +89,7 @@ The source code directory. It contains both the development history and the fina
 （3）3 HC-SR04 ultrasonic sensors
 
 
-<img src="media/photo/ultrasonic_sensor.png" alt="Ultrasonic Sensor Module" width="300">
+<img src="media/photo/ultrasonic_sensors.png" alt="Ultrasonic Sensor Module" width="300">
 
 
 （4）Kamera V2 (8MP, 1080p) camera module
